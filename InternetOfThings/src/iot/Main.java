@@ -1,9 +1,5 @@
 package iot;
 
-import java.util.Iterator;
-
-import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
-
 import jess.*;
 
 public class Main {
@@ -16,7 +12,8 @@ public class Main {
 			
 			r.eval("(batch res/rules.clp)");
 			System.out.println(r.eval("(facts)"));
-			r.eval("(modify ?temperatureSensor1 (value 23))");
+			r.eval("(modify ?temperatureSensorLivingRoom (value 23))");
+			r.eval("(modify ?clock (hour 15))");
 			r.run();
 			
 			System.out.println(r.eval("(facts)"));
