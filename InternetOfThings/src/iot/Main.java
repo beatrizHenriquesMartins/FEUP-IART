@@ -1,5 +1,9 @@
 package iot;
 
+import java.util.Iterator;
+
+import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
+
 import jess.*;
 
 public class Main {
@@ -9,15 +13,11 @@ public class Main {
 		try {
 			
 			Rete r = new Rete();
+			
 			r.eval("(batch res/rules.clp)");
-			
-			r.eval("(assert (chuva))");
-			r.eval("(run)");
-			
 			System.out.println(r.eval("(facts)"));
-			
-			r.eval("(assert (sol))"); 
-			r.eval("(run)");
+			r.eval("(modify ?temperatureSensor1 (value 23))");
+			r.run();
 			
 			System.out.println(r.eval("(facts)"));
 			
@@ -28,5 +28,4 @@ public class Main {
 		}
 
 	}
-
 }

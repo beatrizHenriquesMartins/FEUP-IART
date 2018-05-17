@@ -20,6 +20,8 @@
 
 (reset)
 
+
+
 (defrule comeca-chover
 
     ?old <- (tempo sol)
@@ -67,8 +69,6 @@ objetos:
     - sensor ruído
     - sensor movimento
     - relógio
-    - dispositivo de reconhecimento facial
-    - sensor químico
     - sensor pressão
     - sensor peso
 
@@ -96,4 +96,30 @@ regras
 
 
 */
+
+
+
+(deftemplate sensor
+     "A specific sensor."
+    (slot name (type STRING))
+    (slot value))
+
+(deftemplate window
+     "A window"
+    (slot name (type STRING))
+    (slot open (default false)))
+
+(bind ?temperatureSensor1 (assert (sensor (name temperatureSensor1) (value 0))))
+(bind ?temperatureSensor1 (assert (sensor (name temperatureSensor1) (value 0))))
+(bind ?frontWallWindow (assert (window (name frontWallWindow))))
+
+
+(defrule openWindow
+    "Open window if is too warm"
+    (sensor {name == temperatureSensor1 && value > 22 })
+
+    =>
+
+    (modify ?frontWallWindow (open TRUE))
+)
 
