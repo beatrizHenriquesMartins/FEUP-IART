@@ -5,23 +5,15 @@ import nrc.fuzzy.jess.FuzzyRete;
 
 public class Main {
 
-	public static FuzzyRete r;
 
 	public static void main(String[] args) {
 
 		try {
 			
-			r = new FuzzyRete();
+			FuzzyRete r = new FuzzyRete();
 			
-			r.eval("(batch res/rules.clp)");
-			//System.out.println(r.eval("(facts)"));
-			r.eval("(modify ?temperatureSensorLivingRoom (value 23))");
-			r.eval("(modify ?clock (hour 15))");
+			r.eval("(batch res/rules.clp)");			
 			r.run();
-						
-			//System.out.println(r.eval("(facts)"));
-			
-			
 			
 		} catch (JessException ex) {
 			System.err.println(ex);

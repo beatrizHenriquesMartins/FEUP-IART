@@ -33,6 +33,5 @@ public class AirConditioner extends Device {
 		return fanSpeed;
 	}
 	
-	
 
 }

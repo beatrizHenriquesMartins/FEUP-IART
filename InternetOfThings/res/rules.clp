@@ -175,37 +175,53 @@ regras
 
 
 (bind ?windowTest (new iot.Window "window test"))
+(add ?windowTest)
 (bind ?acTest (new iot.AirConditioner "ac test" ?*fanSpeed*))
-(bind ?sensorTest (new iot.Sensor "sensor test" 10 ?*tempFvar*))
-
+(add ?acTest)
+(bind ?sensorTest (new iot.Sensor "sensor test" 30 ?*tempFvar*))
 
 
 (add ?sensorTest)
 
-(?sensorTest setRealValue 27)
 
 
 (defrule openRoomWindow
+
     "Turn on room 1 AC if is too warm"
     (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "hot")))
 
     =>
 
     (?windowTest setOpen TRUE)
+    (update ?windowTest)
     (?acTest setFanSpeed "high")
+    (update ?acTest)
+    (printout t "disparei o hot" crlf)
 
-    (printout t (?windowTest isOpen) crlf)
-    (printout t (?acTest getFanSpeed) crlf)
-    
 )
 
-; (defrule openRoomWindow
-;     "Turn on room 1 AC if is too warm"
-;     (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "medium")))
+(defrule openRoomWindow2
 
-;     =>
+    "Turn on room 1 AC if is too warm"
+    (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "medium")))
 
-;     (?windowTest setOpen TRUE)
-;     (?acTest setFanSpeed "medium")
-; )
+    =>
+
+    (?windowTest setOpen FALSE)
+    (update ?windowTest)
+    (?acTest setFanSpeed "low")
+    (update ?acTest)
+    (printout t "disparei o medium" crlf)
+
+
+)
+(run)
+(?sensorTest setRealValue 11)
+(update ?sensorTest)
+(run)
+
+(printout t (?windowTest isOpen) crlf)
+(printout t (?acTest getFanSpeed) crlf)
+
+
 
