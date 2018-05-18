@@ -1,4 +1,5 @@
 (load-package nrc.fuzzy.jess.FuzzyFunctions)
+(import nrc.fuzzy.*)
 
 /*
 
@@ -185,43 +186,66 @@ regras
 
 
 
-(defrule openRoomWindow
+(defrule HighAC
 
-    "Turn on room 1 AC if is too warm"
-    (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "hot")))
+    ?sensor <- (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "hot")))
 
     =>
 
-    (?windowTest setOpen TRUE)
-    (update ?windowTest)
-    (?acTest setFanSpeed "high")
-    (update ?acTest)
-    (printout t "disparei o hot" crlf)
+    (assert (fanSpeed (new FuzzyValue ?*fanSpeed* "high")))
+
+    ; (?windowTest setOpen TRUE)
+    ; (update ?windowTest)
+    ; ; (?acTest setFanSpeed "high")
+    ; (update ?acTest)
+    (printout t "disparei o high" crlf)
 
 )
 
-(defrule openRoomWindow2
+(defrule MediumAc
 
-    "Turn on room 1 AC if is too warm"
     (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "medium")))
 
     =>
 
-    (?windowTest setOpen FALSE)
-    (update ?windowTest)
-    (?acTest setFanSpeed "low")
-    (update ?acTest)
+    (assert (fanSpeed (new FuzzyValue ?*fanSpeed* "medium")))
     (printout t "disparei o medium" crlf)
 
 
 )
+
+(defrule LowAc
+
+    (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "cold")))
+
+    =>
+
+    (assert (fanSpeed (new FuzzyValue ?*fanSpeed* "low")))
+    (printout t "disparei o low" crlf)
+
+
+)
+
+
+(defrule defuse 
+
+    (declare (salience -100))
+    
+    (Sensor (name "sensor test") (realValue ?realValue))
+    ?fanSpeedFact <- (fanSpeed ?fuzzyFanSpeed)
+
+    =>
+
+    (bind ?crispFanSpeed (?fuzzyFanSpeed momentDefuzzify))
+    
+    (?acTest setFanSpeed ?crispFanSpeed)
+    (printout t (?acTest getFanSpeed) crlf)
+    (retract ?fanSpeedFact)
+)  
+
 (run)
-(?sensorTest setRealValue 11)
+(?sensorTest setRealValue 17)
 (update ?sensorTest)
 (run)
-
-(printout t (?windowTest isOpen) crlf)
-(printout t (?acTest getFanSpeed) crlf)
-
 
 

@@ -21,10 +21,10 @@ public class AirConditioner extends Device {
 	}
 
 
-	public void setFanSpeed(String linguisticExpression) throws InvalidDefuzzifyException, XValuesOutOfOrderException, InvalidLinguisticExpressionException {
+	public void setFanSpeed(double newSpeed) {
 		
 
-		this.fanSpeed = new FuzzyValue(fuzzyVariableFanSpeed, linguisticExpression).centerOfAreaDefuzzify();
+		this.fanSpeed = newSpeed;
 		
 	}
 
