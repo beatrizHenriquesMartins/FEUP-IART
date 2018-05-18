@@ -1,23 +1,45 @@
 package iot;
 
-public class Sensor<T> {
+import nrc.fuzzy.FuzzyValue;
+import nrc.fuzzy.FuzzyVariable;
+import nrc.fuzzy.TriangleFuzzySet;
+import nrc.fuzzy.XValueOutsideUODException;
+import nrc.fuzzy.XValuesOutOfOrderException;
+
+public class Sensor {
 		
 	String name;
-	T value;
+	FuzzyValue fuzzyValue;
+	private double realValue;
+	private FuzzyVariable fuzzyVariable;
 	
-	public Sensor(String name, T value) {
+	public Sensor(String name, double realValue, FuzzyVariable fuzzyVariable) throws XValueOutsideUODException, XValuesOutOfOrderException {
 		this.name = name;
-		this.value = value;
+		
+		this.fuzzyVariable = fuzzyVariable;
+		setRealValue(realValue);
 	}
 	public String getName() { return name; }
 	public void setName(String s) { name = s; }
 	
-	public void setValue(T newValue) {
-		value = newValue;
+	public void setRealValue(double newRealValue) throws XValueOutsideUODException, XValuesOutOfOrderException {
+		this.realValue = newRealValue;
+		this.fuzzyValue = new FuzzyValue(fuzzyVariable, new TriangleFuzzySet(realValue,realValue,realValue));
+		
 	}
-	public T getValue() {
-		return value;
+	public double getRealValue() {
+		return realValue;
 	}
+	public FuzzyVariable getFuzzyVariable() {
+		return fuzzyVariable;
+	}
+	public FuzzyValue getFuzzyValue() {
+		return fuzzyValue;
+	}
+	
+	
+	
+	
 	
 	
 	

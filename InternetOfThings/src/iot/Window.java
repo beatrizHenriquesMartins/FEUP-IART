@@ -1,8 +1,12 @@
 package iot;
 
-public class Window {
+public class Window extends Device {
 	
 	boolean open = false;
+		
+	public Window(String name) {
+		super(name);
+	}
 
 	public boolean isOpen() {
 		return open;
