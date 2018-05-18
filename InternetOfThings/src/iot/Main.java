@@ -12,6 +12,9 @@ public class Main {
 			
 			FuzzyRete r = new FuzzyRete();
 			
+			r.eval("(batch res/sensor_temperature.clp)");
+			r.eval("(batch res/device_window.clp)");
+			r.eval("(batch res/device_ac.clp)");	
 			r.eval("(batch res/rules.clp)");			
 			r.run();
 			

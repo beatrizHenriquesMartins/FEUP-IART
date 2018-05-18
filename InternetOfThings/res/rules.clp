@@ -139,8 +139,6 @@ regras
 (bind ?alarmRoom2 (assert (device (name "Room 2 Alarm") (stateName on) (state FALSE))))
 
 
-
-
 (defrule openWindow
     "Open window if is too warm"
     (sensor {name == "Living Room Temperature Sensor" && value > 22 })
@@ -151,38 +149,6 @@ regras
     (modify ?window1LivingRoom (state TRUE))
     (modify ?window2LivingRoom (state TRUE))
 )
-
-(defglobal ?*tempFvar* = (new nrc.fuzzy.FuzzyVariable "temperature" 0.0 100.0 "C"))
-
-(?*tempFvar* addTerm "cold"
-(new nrc.fuzzy.ZFuzzySet 10.0 20.0))
-
-(?*tempFvar* addTerm "medium"
-(new nrc.fuzzy.PIFuzzySet 20.0 10.0))
-
-(?*tempFvar* addTerm "hot"
-(new nrc.fuzzy.SFuzzySet 20.0 30.0))
-
-(defglobal ?*fanSpeed* = (new nrc.fuzzy.FuzzyVariable "fan speed" 0.0 1000.0 "RPM"))
-
-(?*fanSpeed* addTerm "low"
-(new nrc.fuzzy.ZFuzzySet 0.0 400.0))
-
-(?*fanSpeed* addTerm "medium"
-(new nrc.fuzzy.PIFuzzySet 500.0 200.0))
-
-(?*fanSpeed* addTerm "high"
-(new nrc.fuzzy.SFuzzySet 600.0 1000.0))
-
-
-(bind ?windowTest (new iot.Window "window test"))
-(add ?windowTest)
-(bind ?acTest (new iot.AirConditioner "ac test" ?*fanSpeed*))
-(add ?acTest)
-(bind ?sensorTest (new iot.Sensor "sensor test" 30 ?*tempFvar*))
-
-
-(add ?sensorTest)
 
 
 
