@@ -191,6 +191,18 @@ regras
     (retract ?fanSpeedFactRoom1)
 )  
 
+
+(defrule teste
+
+    (TemperatureSensor {name == "Living Room Temperature Sensor" && realValue > 40})
+
+    =>
+
+    (?window1LivingRoom setOpen FALSE)
+    (printout t "disparei o teste" crlf)
+
+)
+
 (run)
 (?temperatureSensorLivingRoom setRealValue 17)
 (?insideHumiditySensor setRealValue 90)
