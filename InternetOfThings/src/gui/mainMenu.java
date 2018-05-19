@@ -20,14 +20,6 @@ public class mainMenu {
 
 	private JFrame frame;
 	private JList list_sensores;
-	private JList list_dispositivos;
-	private JList list_regras;
-	private JLabel lblSensores;
-	private JLabel lblDispositivos;
-	private JLabel lblRegras;
-	private Scrollbar scrollbar_sensores;
-	private Scrollbar scrollbar_dispositivos;
-	private Scrollbar scrollbar_regras;
 
 	/**
 	 * Launch the application.
@@ -65,17 +57,17 @@ public class mainMenu {
 		
 		/* **********
 		 * Sensores *
-		 * **********/
-		
-		//Label Sensores
-		lblSensores = new JLabel("Sensores");
-		springLayout.putConstraint(SpringLayout.WEST, lblSensores, 42, SpringLayout.WEST, frame.getContentPane());
-		frame.getContentPane().add(lblSensores);
+		 ********** */
+		//scroll
+		JScrollPane scroll_sensores = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.WEST, scroll_sensores, 42, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, scroll_sensores, -207, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, scroll_sensores, -259, SpringLayout.EAST, frame.getContentPane());
 		
 		// lista de Sensores
 		list_sensores = new JList();
 		list_sensores.setModel(new AbstractListModel() {
-			String[] values = new String[] {"bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla", "bla"};
+			String[] values = new String[] {"bla", "bla1", "bla2", "bla3", "bla4", "bla5", "bla6", "bla7", "bla8", "bla9", "bla10", "bla", "bla", "bla", "bla"};
 			public int getSize() {
 				return values.length;
 			}
@@ -83,74 +75,16 @@ public class mainMenu {
 				return values[index];
 			}
 		});
-		springLayout.putConstraint(SpringLayout.SOUTH, lblSensores, -5, SpringLayout.NORTH, list_sensores);
-		springLayout.putConstraint(SpringLayout.NORTH, list_sensores, 42, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, list_sensores, -207, SpringLayout.SOUTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, list_sensores, 42, SpringLayout.WEST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, list_sensores, -259, SpringLayout.EAST, frame.getContentPane());
-		list_sensores.setValueIsAdjusting(true);
 		list_sensores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		frame.getContentPane().add(list_sensores);
+		scroll_sensores.setViewportView(list_sensores);
+		frame.getContentPane().add(scroll_sensores);
 		
-		scrollbar_sensores = new Scrollbar();
-		springLayout.putConstraint(SpringLayout.NORTH, scrollbar_sensores, 0, SpringLayout.NORTH, list_sensores);
-		springLayout.putConstraint(SpringLayout.WEST, scrollbar_sensores, 6, SpringLayout.EAST, list_sensores);
-		springLayout.putConstraint(SpringLayout.SOUTH, scrollbar_sensores, 0, SpringLayout.SOUTH, list_sensores);
-		springLayout.putConstraint(SpringLayout.EAST, scrollbar_sensores, 21, SpringLayout.EAST, list_sensores);
-		scrollbar_sensores.setValueIsAdjusting(true);
-		frame.getContentPane().add(scrollbar_sensores);
-		
-		/* **************
-		 * Dispositivos *
-		 * **************/
-		
-		//Label Dispositivos
-		lblDispositivos = new JLabel("Dispositivos");
-		springLayout.putConstraint(SpringLayout.NORTH, lblDispositivos, 0, SpringLayout.NORTH, lblSensores);
-		springLayout.putConstraint(SpringLayout.WEST, lblDispositivos, 161, SpringLayout.EAST, lblSensores);
-		frame.getContentPane().add(lblDispositivos);
-		
-		// lista dispositivos
-		list_dispositivos = new JList();
-		springLayout.putConstraint(SpringLayout.NORTH, list_dispositivos, 5, SpringLayout.SOUTH, lblDispositivos);
-		springLayout.putConstraint(SpringLayout.WEST, list_dispositivos, 42, SpringLayout.EAST, list_sensores);
-		springLayout.putConstraint(SpringLayout.SOUTH, list_dispositivos, -207, SpringLayout.SOUTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, list_dispositivos, -42, SpringLayout.EAST, frame.getContentPane());
-		frame.getContentPane().add(list_dispositivos);
-		
-		scrollbar_dispositivos = new Scrollbar();
-		springLayout.putConstraint(SpringLayout.NORTH, scrollbar_dispositivos, 42, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, scrollbar_dispositivos, 6, SpringLayout.EAST, list_dispositivos);
-		springLayout.putConstraint(SpringLayout.SOUTH, scrollbar_dispositivos, 250, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, scrollbar_dispositivos, 21, SpringLayout.EAST, list_dispositivos);
-		frame.getContentPane().add(scrollbar_dispositivos);
-		
-		/* ********
-		 * Regras *
-		 * ********/
-		
-		//label regras
-		lblRegras = new JLabel("Regras");
-		springLayout.putConstraint(SpringLayout.NORTH, lblRegras, 15, SpringLayout.SOUTH, list_sensores);
-		springLayout.putConstraint(SpringLayout.WEST, lblRegras, 0, SpringLayout.WEST, lblSensores);
-		frame.getContentPane().add(lblRegras);
-		
-		//lista de regras
-		list_regras = new JList();
-		springLayout.putConstraint(SpringLayout.NORTH, list_regras, 6, SpringLayout.SOUTH, lblRegras);
-		springLayout.putConstraint(SpringLayout.WEST, list_regras, 42, SpringLayout.WEST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, list_regras, -62, SpringLayout.SOUTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, list_regras, -42, SpringLayout.EAST, frame.getContentPane());
-		list_regras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_regras.setBorder(new LineBorder(Color.WHITE));
-		frame.getContentPane().add(list_regras);
-		
-		scrollbar_regras = new Scrollbar();
-		springLayout.putConstraint(SpringLayout.NORTH, scrollbar_regras, 37, SpringLayout.SOUTH, scrollbar_dispositivos);
-		springLayout.putConstraint(SpringLayout.WEST, scrollbar_regras, 6, SpringLayout.EAST, list_regras);
-		springLayout.putConstraint(SpringLayout.SOUTH, scrollbar_regras, 145, SpringLayout.SOUTH, scrollbar_dispositivos);
-		springLayout.putConstraint(SpringLayout.EAST, scrollbar_regras, 21, SpringLayout.EAST, list_regras);
-		frame.getContentPane().add(scrollbar_regras);
+		//label 
+		JLabel lblSensores = new JLabel("Sensores");
+		springLayout.putConstraint(SpringLayout.WEST, lblSensores, 42, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, lblSensores, -421, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, scroll_sensores, 6, SpringLayout.SOUTH, lblSensores);
+		frame.getContentPane().add(lblSensores);
 		
 		/* ************
 		 * Nova regra *
@@ -158,10 +92,65 @@ public class mainMenu {
 		
 		//Botão nova regra
 		JButton btnNovaRegra = new JButton("Nova Regra");
+		springLayout.putConstraint(SpringLayout.EAST, btnNovaRegra, -42, SpringLayout.EAST, frame.getContentPane());
 		btnNovaRegra.setForeground(Color.BLACK);
 		btnNovaRegra.setBackground(Color.GRAY);
 		springLayout.putConstraint(SpringLayout.SOUTH, btnNovaRegra, -10, SpringLayout.SOUTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, btnNovaRegra, 0, SpringLayout.EAST, list_dispositivos);
 		frame.getContentPane().add(btnNovaRegra);
+		
+		/* **************
+		 * Dispositivos *
+		 ************** */
+
+		// scroll dispositivos
+		JScrollPane scroll_dispositivos = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.NORTH, scroll_dispositivos, 42, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, scroll_dispositivos, 42, SpringLayout.EAST, scroll_sensores);
+		springLayout.putConstraint(SpringLayout.SOUTH, scroll_dispositivos, 250, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, scroll_dispositivos, -42, SpringLayout.EAST, frame.getContentPane());
+		frame.getContentPane().add(scroll_dispositivos);
+		
+		// lista de dispositivos
+		JList list_dispositivos = new JList();
+		list_dispositivos.setModel(new AbstractListModel() {
+			String[] values = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		scroll_dispositivos.setViewportView(list_dispositivos);
+		
+		// label de dispositivos
+		JLabel lblDispositivos = new JLabel("Dispositivos");
+		springLayout.putConstraint(SpringLayout.NORTH, lblDispositivos, 0, SpringLayout.NORTH, lblSensores);
+		springLayout.putConstraint(SpringLayout.WEST, lblDispositivos, 0, SpringLayout.WEST, scroll_dispositivos);
+		frame.getContentPane().add(lblDispositivos);
+		
+		JScrollPane scroll_regras = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.NORTH, scroll_regras, 48, SpringLayout.SOUTH, scroll_sensores);
+		springLayout.putConstraint(SpringLayout.WEST, scroll_regras, 42, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, scroll_regras, -6, SpringLayout.NORTH, btnNovaRegra);
+		springLayout.putConstraint(SpringLayout.EAST, scroll_regras, 0, SpringLayout.EAST, btnNovaRegra);
+		frame.getContentPane().add(scroll_regras);
+		
+		JList regras = new JList();
+		regras.setModel(new AbstractListModel() {
+			String[] values = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		scroll_regras.setViewportView(regras);
+		
+		JLabel lblRegras = new JLabel("Regras");
+		springLayout.putConstraint(SpringLayout.NORTH, lblRegras, 16, SpringLayout.SOUTH, scroll_sensores);
+		springLayout.putConstraint(SpringLayout.WEST, lblRegras, 0, SpringLayout.WEST, scroll_sensores);
+		frame.getContentPane().add(lblRegras);
 	}
 }
