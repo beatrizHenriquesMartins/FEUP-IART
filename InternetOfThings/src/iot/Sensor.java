@@ -6,7 +6,7 @@ import nrc.fuzzy.TriangleFuzzySet;
 import nrc.fuzzy.XValueOutsideUODException;
 import nrc.fuzzy.XValuesOutOfOrderException;
 
-public class Sensor {
+public abstract class Sensor {
 		
 	String name;
 	FuzzyValue fuzzyValue;

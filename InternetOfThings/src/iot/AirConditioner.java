@@ -1,10 +1,6 @@
 package iot;
 
-import nrc.fuzzy.FuzzyValue;
 import nrc.fuzzy.FuzzyVariable;
-import nrc.fuzzy.InvalidDefuzzifyException;
-import nrc.fuzzy.InvalidLinguisticExpressionException;
-import nrc.fuzzy.XValuesOutOfOrderException;
 
 public class AirConditioner extends Device {
 

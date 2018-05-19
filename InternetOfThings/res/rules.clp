@@ -32,19 +32,6 @@ regras
     (slot stateName (type STRING))
     (slot state))
 
-;temperature sensors
-(bind ?temperatureSensorGarden (assert (sensor (name "Garden Temperature Sensor") (value 0))))
-(bind ?temperatureSensorLivingRoom (assert (sensor (name "Living Room Temperature Sensor") (value 0))))
-(bind ?temperatureSensorKitchen (assert (sensor (name "Kitchen Temperature Sensor") (value 0))))
-(bind ?temperatureSensorRoom1 (assert (sensor (name "Room 1 Temperature Sensor") (value 0))))
-(bind ?temperatureSensorRoom2 (assert (sensor (name "Room 2 Temperature Sensor") (value 0))))
-(bind ?temperatureSensorLargeBathroom (assert (sensor (name "Large Bathroom Temperature Sensor") (value 0))))
-(bind ?temperatureSensorSmallBathroom (assert (sensor (name "Small Bathroom Temperature Sensor") (value 0))))
-
-;humidity sensors
-(bind ?insideHumiditySensor (assert (sensor (name "Inside Humidity Sensor") (value 0))))
-(bind ?outsideHumiditySensor (assert (sensor (name "Outside Humidity Sensor") (value 0))))
-(bind ?soilHumiditySensor (assert (sensor (name "Soil Humidity Sensor") (value 0))))
 
 
 ;ph sensor
@@ -77,13 +64,6 @@ regras
 (bind ?lightSensorLargeBathRoom (assert (sensor (name "Large Bathroom Light Sensor") (value 0))))
 
 
-;windows
-(bind ?window1LivingRoom (assert (device (name "Living Room Window 1") (stateName open) (state FALSE))))
-(bind ?window2LivingRoom (assert (device (name "Living Room Window 2") (stateName open) (state FALSE))))
-(bind ?windowKitchen (assert (device (name "Kicthen Window") (stateName open) (state FALSE))))
-(bind ?windowRoom1 (assert (device (name "Room 1 Window") (stateName open) (state FALSE))))
-(bind ?windowRoom2 (assert (device (name "Room 2 Window") (stateName open) (state FALSE))))
-
 ;blinds
 (bind ?blindWindow1LivingRoom (assert (device (name "Living Room Window 1 Blind") (stateName open) (state FALSE))))
 (bind ?blindWindow2LivingRoom (assert (device (name "Living Room Window 2 Blind") (stateName open) (state FALSE))))
@@ -115,10 +95,6 @@ regras
 ;caldeira
 (bind ?waterHeater (assert (device (name "Water Heater") (stateName on) (state 25))))
 
-;air conditioned
-(bind ?airConditionedLivingRoom (assert (device (name "Living Room Air Conditioned") (stateName on) (state FALSE))))
-(bind ?airConditionedRoom1 (assert (device (name "Room 1 Air Conditioned") (stateName on) (state FALSE))))
-(bind ?airConditionedRoom2 (assert (device (name "Room 2 Air Conditioned") (stateName on) (state FALSE))))
 
 ;doors
 (bind ?doorFront (assert (device (name "Front Door") (stateName open) (state FALSE))))
@@ -154,27 +130,29 @@ regras
 
 (defrule HighAC
 
-    ?sensor <- (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "hot")))
+    (TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?t&:(fuzzy-match ?t "hot")))
+    (HumiditySensor (name "Inside Humidity Sensor") (fuzzyValue ?h&:(fuzzy-match ?h "humid")))
+
 
     =>
 
-    (assert (fanSpeed (new FuzzyValue ?*fanSpeed* "high")))
+    (assert (fanSpeedLivingRoom (new FuzzyValue ?*fanSpeed* "high")))
+    (assert (fanSpeedRoom1 (new FuzzyValue ?*fanSpeed* "high")))
 
-    ; (?windowTest setOpen TRUE)
-    ; (update ?windowTest)
-    ; ; (?acTest setFanSpeed "high")
-    ; (update ?acTest)
     (printout t "disparei o high" crlf)
 
 )
 
 (defrule MediumAc
 
-    (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "medium")))
+    (TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?t&:(fuzzy-match ?t "medium")))
+
 
     =>
 
-    (assert (fanSpeed (new FuzzyValue ?*fanSpeed* "medium")))
+    (assert (fanSpeedLivingRoom (new FuzzyValue ?*fanSpeed* "medium")))
+    (assert (fanSpeedRoom1 (new FuzzyValue ?*fanSpeed* "low")))
+    (?window1LivingRoom setOpen TRUE)
     (printout t "disparei o medium" crlf)
 
 
@@ -182,36 +160,43 @@ regras
 
 (defrule LowAc
 
-    (Sensor (name "sensor test") (fuzzyValue ?t&:(fuzzy-match ?t "cold")))
+    (TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?t&:(fuzzy-match ?t "cold")))
+
 
     =>
 
-    (assert (fanSpeed (new FuzzyValue ?*fanSpeed* "low")))
+    (assert (fanSpeedLivingRoom (new FuzzyValue ?*fanSpeed* "low")))
     (printout t "disparei o low" crlf)
 
 
 )
 
-
 (defrule defuse 
 
     (declare (salience -100))
     
-    (Sensor (name "sensor test") (realValue ?realValue))
-    ?fanSpeedFact <- (fanSpeed ?fuzzyFanSpeed)
+    (TemperatureSensor (name "Living Room Temperature Sensor") (realValue ?realValue))
+    ?fanSpeedFactLivingRoom <- (fanSpeedLivingRoom ?fuzzyFanSpeedLivingRoom)
+    ?fanSpeedFactRoom1 <- (fanSpeedRoom1 ?fuzzyFanSpeedRoom1)
 
     =>
 
-    (bind ?crispFanSpeed (?fuzzyFanSpeed momentDefuzzify))
+    (bind ?crispFanSpeedLivingRoom (?fuzzyFanSpeedLivingRoom momentDefuzzify))
+    (bind ?crispFanSpeedRoom1 (?fuzzyFanSpeedRoom1 momentDefuzzify))
     
-    (?acTest setFanSpeed ?crispFanSpeed)
-    (printout t (?acTest getFanSpeed) crlf)
-    (retract ?fanSpeedFact)
+    (?airConditionedLivingRoom setFanSpeed ?crispFanSpeedLivingRoom)
+    (?airConditionedRoom1 setFanSpeed ?crispFanSpeedRoom1)
+    (printout t "Fan ac living room: "(?airConditionedLivingRoom getFanSpeed) crlf)
+    (printout t "Fan ac room1: "(?airConditionedRoom1 getFanSpeed) crlf)
+    (printout t (?window1LivingRoom isOpen) crlf)
+    (retract ?fanSpeedFactLivingRoom)
+    (retract ?fanSpeedFactRoom1)
 )  
 
 (run)
-(?sensorTest setRealValue 17)
-(update ?sensorTest)
+(?temperatureSensorLivingRoom setRealValue 17)
+(?insideHumiditySensor setRealValue 90)
+(update ?temperatureSensorLivingRoom)
+(update ?insideHumiditySensor)
 (run)
-
 
