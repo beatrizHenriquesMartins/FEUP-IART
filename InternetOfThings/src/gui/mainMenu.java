@@ -7,6 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import javax.swing.JList;
 import javax.swing.border.LineBorder;
+
+import iot.JessManipulator;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import java.awt.Color;
@@ -14,6 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.AbstractListModel;
 import javax.swing.ScrollPaneConstants;
 import java.awt.Scrollbar;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.awt.ScrollPane;
 
 public class mainMenu {
@@ -48,6 +53,7 @@ public class mainMenu {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		JessManipulator jessManipulator = new JessManipulator();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 476, 479);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,17 +70,13 @@ public class mainMenu {
 		springLayout.putConstraint(SpringLayout.SOUTH, scroll_sensores, -207, SpringLayout.SOUTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, scroll_sensores, -259, SpringLayout.EAST, frame.getContentPane());
 		
+		//nomes dos sensores
+		ArrayList<String> nomesSensores = new ArrayList<String>();
+		nomesSensores = getNameSensors(jessManipulator);
+		
 		// lista de Sensores
-		list_sensores = new JList();
-		list_sensores.setModel(new AbstractListModel() {
-			String[] values = new String[] {"bla", "bla1", "bla2", "bla3", "bla4", "bla5", "bla6", "bla7", "bla8", "bla9", "bla10", "bla", "bla", "bla", "bla"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		list_sensores = new JList(nomesSensores.toArray());
+		//list_sensores = new JList();
 		list_sensores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scroll_sensores.setViewportView(list_sensores);
 		frame.getContentPane().add(scroll_sensores);
@@ -152,5 +154,23 @@ public class mainMenu {
 		springLayout.putConstraint(SpringLayout.NORTH, lblRegras, 16, SpringLayout.SOUTH, scroll_sensores);
 		springLayout.putConstraint(SpringLayout.WEST, lblRegras, 0, SpringLayout.WEST, scroll_sensores);
 		frame.getContentPane().add(lblRegras);
+	}
+	
+	public ArrayList<String> getNameSensors(JessManipulator js) {
+		ArrayList<String> aux = new ArrayList<String>();
+		
+		System.out.println("Sensores: ");
+		
+		for (int i = 0; i < js.getSensors().size(); i++) {
+			String nomeS = js.getSensors().get(i).getName();
+			
+			System.out.println(nomeS);
+			
+			aux.add(nomeS);
+		}
+		
+		System.out.println("Num Sensores: " + js.getSensors().size());
+		
+		return aux;
 	}
 }
