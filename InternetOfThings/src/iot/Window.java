@@ -4,8 +4,8 @@ public class Window extends Device {
 	
 	boolean open = false;
 		
-	public Window(String name) {
-		super(name);
+	public Window(String name, String jessVariableName) {
+		super(name, jessVariableName);
 	}
 
 	public boolean isOpen() {

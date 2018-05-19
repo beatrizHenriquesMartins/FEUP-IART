@@ -1,23 +1,18 @@
 package iot;
 
-import nrc.fuzzy.FuzzyValue;
 import nrc.fuzzy.FuzzyVariable;
-import nrc.fuzzy.InvalidDefuzzifyException;
-import nrc.fuzzy.InvalidLinguisticExpressionException;
-import nrc.fuzzy.XValuesOutOfOrderException;
 
-public class AirConditioner extends Device {
+public class AirConditioner extends FuzzyDevice {
 
 //	private FuzzyValue fuzzyValueTemperature;
 //	private double realTemperature;
 	
 	private double fanSpeed;
-	FuzzyVariable fuzzyVariableFanSpeed;
 	
-	public AirConditioner(String name, FuzzyVariable fuzzyVariableFanSpeed) {
-		super(name);
+	
+	public AirConditioner(String name, FuzzyVariable fuzzyVariableFanSpeed, String jessVariableName) {
+		super(name, "fanSpeed", fuzzyVariableFanSpeed, jessVariableName);
 		this.fanSpeed = 0;
-		this.fuzzyVariableFanSpeed = fuzzyVariableFanSpeed;
 	}
 
 

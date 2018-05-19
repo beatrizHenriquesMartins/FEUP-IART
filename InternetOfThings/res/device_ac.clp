@@ -9,5 +9,11 @@
 (?*fanSpeed* addTerm "high"
 (new nrc.fuzzy.SFuzzySet 600.0 1000.0))
 
-(bind ?acTest (new iot.AirConditioner "ac test" ?*fanSpeed*))
-(add ?acTest)
+(bind ?airConditionedLivingRoom (new AirConditioner "Living Room Air Conditioned" ?*fanSpeed* "airConditionedLivingRoom"))
+(add ?airConditionedLivingRoom)
+
+(bind ?airConditionedRoom1 (new AirConditioner "Room 1 Air Conditioned" ?*fanSpeed* "airConditionedRoom1"))
+(add ?airConditionedRoom1)
+
+(bind ?airConditionedRoom2 (new AirConditioner "Room 2 Air Conditioned" ?*fanSpeed* "airConditionedRoom2"))
+(add ?airConditionedRoom2)
