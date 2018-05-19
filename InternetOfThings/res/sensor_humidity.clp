@@ -9,7 +9,7 @@
 (?*humidityFvar* addTerm "humid"
 (new nrc.fuzzy.SFuzzySet 70.0 90.0))
 
-(bind ?insideHumiditySensor (new HumiditySensor "Inside Humidity Sensor" 100 ?*humidityFvar* "insideHumiditySensor"))
+(bind ?insideHumiditySensor (new HumiditySensor "Inside Humidity Sensor" 30 ?*humidityFvar* "insideHumiditySensor"))
 (add ?insideHumiditySensor)
 
 (bind ?outsideHumiditySensor (new HumiditySensor "Outside Humidity Sensor" 50 ?*humidityFvar* "outsideHumiditySensor"))

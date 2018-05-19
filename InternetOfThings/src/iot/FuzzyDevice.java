@@ -5,7 +5,7 @@ import java.util.Enumeration;
 
 import nrc.fuzzy.FuzzyVariable;
 
-public class FuzzyDevice extends Device {
+public abstract class FuzzyDevice extends Device {
 	FuzzyVariable fuzzyVariable;
 	String fuzzyVariableName;
 

@@ -17,10 +17,6 @@ public abstract class Device {
 		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "Device [name=" + name + "]";
-	}
 	
 	public String getCode() {
 		String code = "";

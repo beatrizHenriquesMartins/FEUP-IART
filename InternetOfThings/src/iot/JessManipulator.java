@@ -16,22 +16,37 @@ public class JessManipulator {
 	String rulesFileName = "res/rules.clp";
 	
 
-	public static void main(String[] args) throws JessException {
+	public static void main(String[] args) throws JessException, XValueOutsideUODException, XValuesOutOfOrderException {
 
 		JessManipulator jess = new JessManipulator();
 		
-		System.out.println(jess.getSensors());
-		System.out.println(jess.getFuzzyDevices());
+//		System.out.println(jess.getSensors());
+//		System.out.println(jess.getFuzzyDevices());
 		
-		ArrayList<Pair<Sensor,String>> sensors = new ArrayList<>();
-		ArrayList<Pair<FuzzyDevice,String>> devices = new ArrayList<>();
+//		ArrayList<Pair<Sensor,String>> sensors = new ArrayList<>();
+//		ArrayList<Pair<FuzzyDevice,String>> devices = new ArrayList<>();
+//		sensors.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), "hot"));
+//		sensors.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
+//		devices.add(new Pair<>(jess.getFuzzyDeviceByName("Room 1 Air Conditioned"), "high"));
+//		jess.createNewFuzzyRule("testFuzzyRule", sensors, devices);
 		
-		sensors.add(new Pair<>(jess.getSensorByName("airConditionedLivingRoom"), "hot"));
-		devices.add(new Pair<>(jess.getFuzzyDevices().get(2), "high"));
-		jess.createNewFuzzyRule("testRule", sensors, devices);
-		
-		System.out.println(jess.getSensors().get(0).getFuzzySetNames());
-		System.out.println(jess.getFuzzyDevices().get(0).getFuzzySetNames());
+		System.out.println(jess.getDeviceByName("Living Room Window 1"));
+		ArrayList<Pair<Sensor,String>> sensors2 = new ArrayList<>();
+		ArrayList<Pair<Device,String>> devices2 = new ArrayList<>();
+		sensors2.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), "hot"));
+		sensors2.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
+		devices2.add(new Pair<>(jess.getDeviceByName("Living Room Window 1"), "Open"));
+		jess.createNewRule("testSimpleRule", sensors2, devices2);
+		System.out.println(jess.getDeviceByName("Living Room Window 1"));
+
+		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"), 100);
+		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 24.9);
+//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 14.9);
+		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 27.9);
+		System.out.println(jess.getDeviceByName("Living Room Window 1"));
+
+//		System.out.println(jess.getSensors().get(0).getFuzzySetNames());
+//		System.out.println(jess.getFuzzyDevices().get(0).getFuzzySetNames());
 			
 	}
 	
@@ -102,6 +117,16 @@ public class JessManipulator {
 		return devices;
 	}
 	
+	public FuzzyDevice getFuzzyDeviceByName(String name) {
+		ArrayList<FuzzyDevice> devices = getFuzzyDevices();
+		for (int i = 0; i < devices.size(); i++) {
+			if(devices.get(i).getName().equals(name)){
+				return devices.get(i);
+			}
+		}
+		return null;
+	}
+	
 	public Device getDeviceByName(String name) {
 		ArrayList<Device> devices = getDevices();
 		for (int i = 0; i < devices.size(); i++) {
@@ -128,6 +153,37 @@ public class JessManipulator {
 		return devices;
 	}
 	
+	public void createNewRule(String ruleName, ArrayList<Pair<Sensor,String>> sensors, ArrayList<Pair<Device,String>> devices) throws JessException {
+		
+		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+		PrintWriter out = new PrintWriter(outBuffer);
+		
+		out.println("(defrule " + ruleName);
+		
+		for (int i = 0; i < sensors.size(); i++) {
+			Sensor sensor = sensors.get(i).left;
+			String value = sensors.get(i).right;
+			
+			out.print("\t(" + sensor.type + " ");
+			out.print("(name \"" + sensor.getName() + "\") ");
+			out.println("(fuzzyValue ?v" + i + "&:(fuzzy-match ?v" + i + " \"" + value + "\")))");
+		}
+		
+		out.println("\n\t=>\n");
+		
+		
+		for (int i = 0; i < devices.size(); i++) {
+			Device device = devices.get(i).left;
+			String value = devices.get(i).right;		
+			
+			out.println("(?" + device.jessVariableName + " setState \"" + value + "\"))");
+		}
+		out.close();
+//		System.out.println(outBuffer.toString());
+		rete.eval(outBuffer.toString());
+		rete.run();
+	}
+		
 	public void createNewFuzzyRule(String ruleName, ArrayList<Pair<Sensor,String>> sensors, ArrayList<Pair<FuzzyDevice,String>> devices) throws JessException {
 		
 		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
