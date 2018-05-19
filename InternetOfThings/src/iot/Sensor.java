@@ -37,5 +37,10 @@ public class Sensor {
 		return fuzzyValue;
 	}
 	
+	@Override
+	public String toString() {
+		return "Sensor [name=" + name + "]";
+	}
+	
 
 }

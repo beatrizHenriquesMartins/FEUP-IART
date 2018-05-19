@@ -22,10 +22,7 @@ public class AirConditioner extends Device {
 
 
 	public void setFanSpeed(double newSpeed) {
-		
-
 		this.fanSpeed = newSpeed;
-		
 	}
 
 

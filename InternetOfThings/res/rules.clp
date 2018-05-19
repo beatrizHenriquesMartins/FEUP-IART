@@ -205,12 +205,17 @@ regras
     (bind ?crispFanSpeed (?fuzzyFanSpeed momentDefuzzify))
     
     (?acTest setFanSpeed ?crispFanSpeed)
+    (update ?acTest)
+
     (printout t (?acTest getFanSpeed) crlf)
     (retract ?fanSpeedFact)
 )  
 
 (run)
 (?sensorTest setRealValue 17)
+(update ?sensorTest)
+(run)
+(?sensorTest setRealValue 24.7)
 (update ?sensorTest)
 (run)
 
