@@ -3,6 +3,7 @@ package gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -356,20 +357,25 @@ public class MainMenu {
 	}
 	
 	class RulesModel extends AbstractListModel<String> {
-
+		
+		ArrayList<String> rules = new ArrayList<>();
+		public RulesModel() {
+			
+			rules = jessManipulator.getRules();
+		}
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public int getSize() {
 			
-			return 10;
+			return rules.size();
 		}
 
 		@Override
 		public String getElementAt(int index) {
 			
-			return "Regra " + index;
+			return rules.get(index);
 		}
 		
 	}

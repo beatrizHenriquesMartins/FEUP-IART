@@ -7,9 +7,11 @@ import javax.swing.JList;
 import javax.swing.JTextField;
 
 import iot.Device;
+import iot.FuzzyDevice;
 import iot.JessManipulator;
 import iot.JessManipulator.Pair;
 import iot.Sensor;
+import iot.SimpleDevice;
 
 import javax.swing.JScrollPane;
 
@@ -32,7 +34,7 @@ public class NewRule extends JFrame {
 	private JComboBox<String> comboBoxOperator;
 	private JScrollPane scrollPaneSensors;
 	private JComboBox<String> comboBoxSensors;
-	private JComboBox<String> comboBoxFuzzyDevices;
+	private JComboBox<String> comboBoxValueDevice;
 	private JScrollPane scrollPaneDevices;
 	private JButton btnOk;
 	
@@ -44,7 +46,8 @@ public class NewRule extends JFrame {
 	private ArrayList<Pair<Sensor,Object>> selectedSensors = new ArrayList<>();
 	private JList<String> sensorsList = new JList<>();
 	private ArrayList<Pair<Device,Object>> selectedDevices = new ArrayList<>();
-	
+	private JList<String> devicesList = new JList<>();
+
 	
 	public NewRule(JessManipulator jessManipulator, MainMenu parent) {
 		
@@ -75,7 +78,7 @@ public class NewRule extends JFrame {
 		scrollPaneSensors.setBounds(35, 91, 544, 120);
 		getContentPane().add(scrollPaneSensors);
 		
-		JLabel lblFuzzyValue = new JLabel("Fuzzy Value");
+		JLabel lblFuzzyValue = new JLabel("Value");
 		lblFuzzyValue.setBounds(220, 34, 90, 16);
 		getContentPane().add(lblFuzzyValue);
 		
@@ -90,14 +93,11 @@ public class NewRule extends JFrame {
 		JLabel lblDevice = new JLabel("Device");
 		lblDevice.setBounds(35, 233, 61, 16);
 		getContentPane().add(lblDevice);
+	
 		
-		comboBoxSensors = new JComboBox<>();
-		comboBoxSensors.setBounds(35, 251, 187, 27);
-		getContentPane().add(comboBoxSensors);
-		
-		comboBoxFuzzyDevices = new JComboBox<>();
-		comboBoxFuzzyDevices.setBounds(234, 251, 111, 27);
-		getContentPane().add(comboBoxFuzzyDevices);
+		comboBoxValueDevice = new JComboBox<>();
+		comboBoxValueDevice.setBounds(234, 251, 111, 27);
+		getContentPane().add(comboBoxValueDevice);
 		
 		JLabel label = new JLabel("Fuzzy Value");
 		label.setBounds(240, 233, 90, 16);
@@ -133,17 +133,18 @@ public class NewRule extends JFrame {
 		initializeComboBoxOperators();
 		
 		btnAddSensor.addActionListener(new ButtonAddSensorListener());
+
+		initializeComboBoxDevices(jessManipulator.getDevices());
+		initializeComboBoxSetNamesDevices(jessManipulator.getDeviceByName((String)comboBoxDevices.getSelectedItem()).getSetNames()) ;
 		
-		initializeSelectedSensorList();
+		btnAddDevice.addActionListener(new ButtonAddDeviceListener());
+		sensorsList.setModel(new SensorListModel());
+		devicesList.setModel(new DeviceListModel());
+		scrollPaneSensors.setViewportView(sensorsList);
+		scrollPaneDevices.setViewportView(devicesList);
+
 	}
 	
-	public void initializeSelectedSensorList() {
-		
-		sensorsList.setModel(new SensorListModel());
-		scrollPaneSensors.setViewportView(sensorsList);
-		
-	}
-
 	public void initializeComboBoxSensors(ArrayList<Sensor> sensors) {
 		
 		comboBoxSensors = new JComboBox<>();
@@ -160,6 +161,22 @@ public class NewRule extends JFrame {
 		
 	}
 	
+	public void initializeComboBoxDevices(ArrayList<Device> devices) {
+		
+		comboBoxDevices = new JComboBox<>();
+		comboBoxDevices.setBounds(35, 251, 187, 27);
+		getContentPane().add(comboBoxDevices);
+		
+		for(Device device: devices) {
+			
+			comboBoxDevices.addItem(device.getName());
+			
+		}
+		
+		comboBoxDevices.addItemListener(new ComboBoxDeviceActionListener());
+		
+	}
+	
 	class ComboBoxSensorActionListener implements ItemListener {
 
 		
@@ -169,6 +186,18 @@ public class NewRule extends JFrame {
 			Sensor sensor = jessManipulator.getSensorByName((String)e.getItem());
 			ArrayList<String> fuzzySets = sensor.getFuzzySetNames();
 			initializeComboBoxFuzzySetNamesSensors(fuzzySets);
+		}
+		
+	}
+	
+	class ComboBoxDeviceActionListener implements ItemListener {
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			
+			Device device = jessManipulator.getDeviceByName((String)e.getItem());
+			ArrayList<String> sets = device.getSetNames();
+			initializeComboBoxSetNamesDevices(sets);
 		}
 		
 	}
@@ -183,6 +212,17 @@ public class NewRule extends JFrame {
 			
 		}
 		
+	}
+	
+	private void initializeComboBoxSetNamesDevices(ArrayList<String> sets) {
+			
+		comboBoxValueDevice.removeAllItems();
+		
+		for(String set: sets) {
+			
+			comboBoxValueDevice.addItem(set);
+			
+		}
 	}
 	
 	private void initializeComboBoxOperators() {
@@ -232,6 +272,36 @@ public class NewRule extends JFrame {
 		
 	}
 	
+	class ButtonAddDeviceListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			String selectedDeviceName = (String) comboBoxDevices.getSelectedItem();
+			Device selectedDevice = jessManipulator.getDeviceByName(selectedDeviceName);
+			String selectedSet = (String) comboBoxValueDevice.getSelectedItem();
+			
+			String realValueString = realValueDevice.getText();
+						
+			if(realValueString.equals("") || selectedDevice instanceof SimpleDevice) {
+				
+				selectedDevices.add(new Pair<Device, Object>(selectedDevice,selectedSet));
+				
+			}
+			
+			else {
+				
+				Double realValue = Double.parseDouble(realValueString);
+				selectedDevices.add(new Pair<Device, Object>(selectedDevice, realValue));
+				
+			}
+			
+			devicesList.setModel(new DeviceListModel());
+			
+		}
+		
+	}
+	
 	class SensorListModel extends AbstractListModel<String> {
 
 
@@ -267,7 +337,24 @@ public class NewRule extends JFrame {
 			return sensorName + rest;
 		}
 		
-		
+	}
+	
+	class DeviceListModel extends AbstractListModel<String> {
+
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public int getSize() {
+			
+			return selectedDevices.size();
+		}
+
+		@Override
+		public String getElementAt(int index) {
+
+			return selectedDevices.get(index).left.getName() + " = " + selectedDevices.get(index).right;
+		}
 		
 	}
 	
