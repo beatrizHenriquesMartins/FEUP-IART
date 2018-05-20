@@ -476,7 +476,7 @@ public class JessManipulator {
 			out.print(devices.get(i).right);
 			
 			if(i != devices.size() -1) {
-				out.print(" and");
+				out.print(" and ");
 			}
 		}
 		

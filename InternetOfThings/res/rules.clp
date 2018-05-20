@@ -1,11 +1,12 @@
-(defrule testSimpleRuleF-N
+(defrule Regra_de_caca
 
-	"testSimpleRuleF-N: If Living Room Temperature Sensor is cold then Living Room Heater 1 is set to high"
+	"Regra_de_caca: If Basement Light Sensor is low then Security Alarm is set to On and Kitchen Heater is set to high"
 
-	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+	(LightSensor (name "Basement Light Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "low")))
 
 	=>
 
-	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "high")))
+	(?securityAlarm setState "On")
+	(assert (Kitchen_Heater (new FuzzyValue ?*heaterTemperature* "high")))
 )
 

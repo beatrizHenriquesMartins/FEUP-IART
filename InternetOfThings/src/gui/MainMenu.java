@@ -48,8 +48,7 @@ public class MainMenu {
 	private JList<String> rulesList = new JList<>();
 	
 	private JButton btnNewRule;
-
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -378,6 +377,10 @@ public class MainMenu {
 			return rules.get(index);
 		}
 		
+	}
+		
+	public void updateRulesList() {
+		rulesList.setModel(new RulesModel());
 	}
 		
 	

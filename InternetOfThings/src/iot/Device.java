@@ -1,7 +1,6 @@
 package iot;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 public abstract class Device {
 	String name;

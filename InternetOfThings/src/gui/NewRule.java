@@ -7,11 +7,11 @@ import javax.swing.JList;
 import javax.swing.JTextField;
 
 import iot.Device;
-import iot.FuzzyDevice;
 import iot.JessManipulator;
 import iot.JessManipulator.Pair;
 import iot.Sensor;
 import iot.SimpleDevice;
+import jess.JessException;
 
 import javax.swing.JScrollPane;
 
@@ -19,8 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import javax.naming.NameNotFoundException;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 
@@ -47,6 +49,8 @@ public class NewRule extends JFrame {
 	private JList<String> sensorsList = new JList<>();
 	private ArrayList<Pair<Device,Object>> selectedDevices = new ArrayList<>();
 	private JList<String> devicesList = new JList<>();
+	private JLabel lblRuleName;
+	private JTextField textFieldRuleName;
 
 	
 	public NewRule(JessManipulator jessManipulator, MainMenu parent) {
@@ -54,78 +58,78 @@ public class NewRule extends JFrame {
 		this.jessManipulator = jessManipulator;
 		this.parent = parent;
 		
-		this.setBounds(20,20,600,500);
+		this.setBounds(10,0,600,550);
 		getContentPane().setLayout(null);
 		
 		
 		
 		JLabel lblSensors = new JLabel("Sensor");
-		lblSensors.setBounds(35, 34, 61, 16);
+		lblSensors.setBounds(36, 60, 61, 16);
 		getContentPane().add(lblSensors);
 		
 		comboBoxFuzzyValueSensor = new JComboBox<>();
-		comboBoxFuzzyValueSensor.setBounds(220, 52, 111, 27);
+		comboBoxFuzzyValueSensor.setBounds(221, 78, 111, 27);
 		getContentPane().add(comboBoxFuzzyValueSensor);
 		
 		realValueSensor = new JTextField();
-		realValueSensor.setBounds(343, 51, 46, 26);
+		realValueSensor.setBounds(344, 77, 80, 26);
 		getContentPane().add(realValueSensor);
 		realValueSensor.setColumns(10);
 		
 		
 		
 		scrollPaneSensors = new JScrollPane();
-		scrollPaneSensors.setBounds(35, 91, 544, 120);
+		scrollPaneSensors.setBounds(36, 117, 544, 120);
 		getContentPane().add(scrollPaneSensors);
 		
 		JLabel lblFuzzyValue = new JLabel("Value");
-		lblFuzzyValue.setBounds(220, 34, 90, 16);
+		lblFuzzyValue.setBounds(221, 60, 90, 16);
 		getContentPane().add(lblFuzzyValue);
 		
 		JLabel lblRealValue = new JLabel("Real Value");
-		lblRealValue.setBounds(343, 34, 80, 16);
+		lblRealValue.setBounds(344, 60, 80, 16);
 		getContentPane().add(lblRealValue);
 		
 		JLabel lblNewLabel = new JLabel("Op");
-		lblNewLabel.setBounds(440, 34, 47, 16);
+		lblNewLabel.setBounds(441, 60, 47, 16);
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblDevice = new JLabel("Device");
-		lblDevice.setBounds(35, 233, 61, 16);
+		lblDevice.setBounds(36, 259, 61, 16);
 		getContentPane().add(lblDevice);
 	
 		
 		comboBoxValueDevice = new JComboBox<>();
-		comboBoxValueDevice.setBounds(234, 251, 111, 27);
+		comboBoxValueDevice.setBounds(235, 277, 111, 27);
 		getContentPane().add(comboBoxValueDevice);
 		
 		JLabel label = new JLabel("Fuzzy Value");
-		label.setBounds(240, 233, 90, 16);
+		label.setBounds(241, 259, 90, 16);
 		getContentPane().add(label);
 		
 		JLabel label_1 = new JLabel("Real Value");
-		label_1.setBounds(357, 233, 80, 16);
+		label_1.setBounds(358, 259, 80, 16);
 		getContentPane().add(label_1);
 		
 		realValueDevice = new JTextField();
 		realValueDevice.setColumns(10);
-		realValueDevice.setBounds(357, 250, 130, 26);
+		realValueDevice.setBounds(358, 276, 130, 26);
 		getContentPane().add(realValueDevice);
 		
 		scrollPaneDevices = new JScrollPane();
-		scrollPaneDevices.setBounds(35, 290, 544, 120);
+		scrollPaneDevices.setBounds(36, 316, 544, 120);
 		getContentPane().add(scrollPaneDevices);
 		
 		btnOk = new JButton("Ok");
-		btnOk.setBounds(462, 443, 117, 29);
+		btnOk.setBounds(463, 469, 117, 29);
 		getContentPane().add(btnOk);
 		
 		btnAddSensor = new JButton("Add");
-		btnAddSensor.setBounds(499, 51, 80, 29);
+		btnAddSensor.setBounds(500, 77, 80, 29);
 		getContentPane().add(btnAddSensor);
 		
 		btnAddDevice = new JButton("Add");
-		btnAddDevice.setBounds(499, 250, 80, 29);
+		btnAddDevice.setBounds(500, 276, 80, 29);
 		getContentPane().add(btnAddDevice);
 		
 		initializeComboBoxSensors(jessManipulator.getSensors());
@@ -142,13 +146,24 @@ public class NewRule extends JFrame {
 		devicesList.setModel(new DeviceListModel());
 		scrollPaneSensors.setViewportView(sensorsList);
 		scrollPaneDevices.setViewportView(devicesList);
+		
+		lblRuleName = new JLabel("Rule Name");
+		lblRuleName.setBounds(36, 23, 95, 16);
+		getContentPane().add(lblRuleName);
+		
+		textFieldRuleName = new JTextField();
+		textFieldRuleName.setBounds(114, 18, 466, 26);
+		getContentPane().add(textFieldRuleName);
+		textFieldRuleName.setColumns(10);
+		
+		btnOk.addActionListener(new OkButtonListener());
 
 	}
 	
 	public void initializeComboBoxSensors(ArrayList<Sensor> sensors) {
 		
 		comboBoxSensors = new JComboBox<>();
-		comboBoxSensors.setBounds(35, 52, 173, 27);
+		comboBoxSensors.setBounds(36, 78, 173, 27);
 				
 		for(Sensor sensor: sensors) {
 			
@@ -164,7 +179,7 @@ public class NewRule extends JFrame {
 	public void initializeComboBoxDevices(ArrayList<Device> devices) {
 		
 		comboBoxDevices = new JComboBox<>();
-		comboBoxDevices.setBounds(35, 251, 187, 27);
+		comboBoxDevices.setBounds(36, 277, 187, 27);
 		getContentPane().add(comboBoxDevices);
 		
 		for(Device device: devices) {
@@ -229,7 +244,7 @@ public class NewRule extends JFrame {
 		
 		String[] ops = new String[] {">",">=","<","<=","==","!="};
 		comboBoxOperator = new JComboBox<>();
-		comboBoxOperator.setBounds(435, 52, 61, 27);
+		comboBoxOperator.setBounds(436, 78, 61, 27);
 		
 		for(String op: ops) {
 			
@@ -267,6 +282,7 @@ public class NewRule extends JFrame {
 			}
 			
 			sensorsList.setModel(new SensorListModel());
+			realValueSensor.setText("");
 						
 		}
 		
@@ -299,6 +315,28 @@ public class NewRule extends JFrame {
 			devicesList.setModel(new DeviceListModel());
 			
 		}
+		
+	}
+	
+	class OkButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			try {
+				jessManipulator.createNewVersatileRule(ruleNameUtil(), selectedSensors, selectedDevices);
+				parent.updateRulesList();
+				NewRule.this.setVisible(false);
+				
+				
+			} catch (FileNotFoundException | NameNotFoundException | JessException e1) {
+				e1.printStackTrace();
+			}
+			
+			
+		}
+		
+		
 		
 	}
 	
@@ -355,6 +393,16 @@ public class NewRule extends JFrame {
 
 			return selectedDevices.get(index).left.getName() + " = " + selectedDevices.get(index).right;
 		}
+		
+	}
+	
+	private String ruleNameUtil() {
+		
+		String result = "";
+		for (int i = 0; i < textFieldRuleName.getText().length(); i++) {
+			result += textFieldRuleName.getText().charAt(i) == ' ' ? '_' : textFieldRuleName.getText().charAt(i);
+		}
+		return result;
 		
 	}
 	
