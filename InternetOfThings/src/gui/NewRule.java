@@ -32,8 +32,8 @@ public class NewRule extends JFrame {
 	
 	private JessManipulator jessManipulator;
 	private MainMenu parent;
-	private JButton btnNewButton;
-	private JButton button;
+	private JButton btnAddSensor;
+	private JButton btnAddDevice;
 	
 	private ArrayList<Pair<Sensor,Object>> selectedSensors = new ArrayList<>();
 	private ArrayList<Pair<Device,Object>> selectedDevices = new ArrayList<>();
@@ -126,13 +126,13 @@ public class NewRule extends JFrame {
 		comboBoxSensors.setBounds(35, 52, 173, 27);
 		getContentPane().add(comboBoxSensors);
 		
-		btnNewButton = new JButton("Add");
-		btnNewButton.setBounds(499, 51, 80, 29);
-		getContentPane().add(btnNewButton);
+		btnAddSensor = new JButton("Add");
+		btnAddSensor.setBounds(499, 51, 80, 29);
+		getContentPane().add(btnAddSensor);
 		
-		button = new JButton("Add");
-		button.setBounds(499, 250, 80, 29);
-		getContentPane().add(button);
+		btnAddDevice = new JButton("Add");
+		btnAddDevice.setBounds(499, 250, 80, 29);
+		getContentPane().add(btnAddDevice);
 		
 		for(Sensor sensor: jessManipulator.getSensors()) {
 			
@@ -140,7 +140,9 @@ public class NewRule extends JFrame {
 			
 		}
 		
+		
+		
 	}
-
+	
 
 }
