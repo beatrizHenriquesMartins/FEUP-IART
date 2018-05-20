@@ -207,22 +207,20 @@ public class JessManipulator {
 //		
 //		System.out.println(jess.getDeviceByName("Living Room Window 1 Blind"));	
 //		System.out.println(jess.getSensorByName("Room 1 Light Sensor"));	
-//		
-//		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
-//		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
-//		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
-////		sensors8.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
-//		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Heater 1"), "high"));
-//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
-//		
-//		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
-//		
-//		System.out.println(jess.getDeviceByName("Living Room Heater 1"));	
-//		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
+		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
+		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
+		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
+		sensors9.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
+		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Heater 1"), "high"));
+		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
 		
+		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
 		
+		System.out.println(jess.getDeviceByName("Living Room Heater 1"));	
+		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
+//		jess.getRules();
 	}
 	
 	public JessManipulator() {
@@ -342,6 +340,22 @@ public class JessManipulator {
 		return devices;
 	}
 	
+	public void getRules() {
+		@SuppressWarnings("unchecked")
+		Iterator<Object> it = rete.listDefrules();
+		while(it.hasNext()) {
+			
+			Defrule rule = (Defrule) it.next();
+			if(rule.getName().indexOf("MAIN::defuzzify") != 0) {
+				
+				System.out.println(rule);
+				System.out.println(rule.getConditionalElements().getConditionalElement(0).isGroup());
+				System.out.println(rule.getAction(0));
+				System.out.println(rule.getDocstring());
+			}
+		}
+	}
+	
 	public void createNewVersatileRule(String ruleName, ArrayList<Pair<Sensor,Object>> sensors, ArrayList<Pair<Device,Object>> devices) throws JessException, FileNotFoundException, NameNotFoundException {
 		
 		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
@@ -349,6 +363,8 @@ public class JessManipulator {
 		
 		out.println("(defrule " + ruleName + "\n");
 		
+		
+		out.println("\t\"" + addRuleDescription(ruleName, sensors, devices) + "\"\n");
 		for (int i = 0; i < sensors.size(); i++) {
 			
 			Sensor sensor = sensors.get(i).left;
@@ -418,6 +434,54 @@ public class JessManipulator {
 		
 	}
 	
+	private String addRuleDescription(String ruleName, ArrayList<Pair<Sensor, Object>> sensors,
+			ArrayList<Pair<Device, Object>> devices) throws NameNotFoundException {
+		
+		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+		PrintWriter out = new PrintWriter(outBuffer);
+		
+		out.print(ruleName + ": If ");
+		
+		for (int i = 0; i < sensors.size(); i++) {
+			Sensor sensor = sensors.get(i).left;
+			Object condition = sensors.get(i).right;
+			
+			out.print(sensor.getName() + " ");
+			
+			if(condition instanceof Pair) {
+				@SuppressWarnings("unchecked")
+				Pair<Double,String> pair = (Pair<Double,String>) sensors.get(i).right;
+				Double value = pair.left;
+				Operator operator = Operator.type(pair.right);
+				
+				out.print("is " + operator.text + value + " ");
+				
+			}else 
+			if(condition instanceof String) {
+				out.print("is " + condition + " ");
+			}
+			
+			if(i != sensors.size() -1) {
+				out.print("and ");
+			}	
+		}
+		
+		out.print("then ");
+		for (int i = 0; i < devices.size(); i++) {
+			Device device = devices.get(i).left;
+			
+			out.print(device.getName() + " is set to ");
+			out.print(devices.get(i).right);
+			
+			if(i != devices.size() -1) {
+				out.print(" and");
+			}
+		}
+		
+		out.close();
+		return outBuffer.toString();
+	}
+
 	public void createNewRuleFF(String ruleName, ArrayList<Pair<Sensor,String>> sensors, ArrayList<Pair<FuzzyDevice,String>> devices) throws JessException, FileNotFoundException {
 		
 		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
@@ -489,19 +553,21 @@ public class JessManipulator {
 
 	private static enum Operator {
 		
-		GREATER(">"),
-		GREATER_EQUAL(">="),
-		LESS("<"),
-		LESS_EQUAL( "<="),
-		EQUALS("=="),
-		DIFFERENT("!=");
+		GREATER(">", "greater than "),
+		GREATER_EQUAL(">=", "greater than or equal to"),
+		LESS("<", "less than "),
+		LESS_EQUAL( "<=", "less than or equal to"),
+		EQUALS("==", "equal to "),
+		DIFFERENT("!=", "different of ");
 		
 		static final ArrayList<String> types = new ArrayList<String>(Arrays.asList(">",">=","<","<=","==","!="));
 		
 		public String token;
+		public String text;
 		
-		Operator(String token) {
+		Operator(String token, String text) {
 			this.token = token;
+			this.text = text;
 		}
 		
 		static Operator type(String text) throws NameNotFoundException {
