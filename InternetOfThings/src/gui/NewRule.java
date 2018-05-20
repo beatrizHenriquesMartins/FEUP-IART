@@ -12,6 +12,10 @@ import iot.Sensor;
 
 import javax.swing.JScrollPane;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -115,7 +119,17 @@ public class NewRule extends JFrame {
 		btnOk.setBounds(462, 443, 117, 29);
 		getContentPane().add(btnOk);
 		
+		btnAddSensor = new JButton("Add");
+		btnAddSensor.setBounds(499, 51, 80, 29);
+		getContentPane().add(btnAddSensor);
+		
+		btnAddDevice = new JButton("Add");
+		btnAddDevice.setBounds(499, 250, 80, 29);
+		getContentPane().add(btnAddDevice);
+		
 		initializeComboBoxSensors();
+		
+		buildComboBoxFuzzySetNamesSensors(jessManipulator.getSensorByName((String)comboBoxSensors.getSelectedItem()).getFuzzySetNames()) ;
 		
 		
 	}
@@ -126,21 +140,38 @@ public class NewRule extends JFrame {
 		comboBoxSensors.setBounds(35, 52, 173, 27);
 		getContentPane().add(comboBoxSensors);
 		
-		btnAddSensor = new JButton("Add");
-		btnAddSensor.setBounds(499, 51, 80, 29);
-		getContentPane().add(btnAddSensor);
-		
-		btnAddDevice = new JButton("Add");
-		btnAddDevice.setBounds(499, 250, 80, 29);
-		getContentPane().add(btnAddDevice);
-		
 		for(Sensor sensor: jessManipulator.getSensors()) {
 			
 			comboBoxSensors.addItem(sensor.getName());
 			
 		}
 		
+		comboBoxSensors.addItemListener(new ComboBoxSensorActionListener());
 		
+	}
+	
+	class ComboBoxSensorActionListener implements ItemListener {
+
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			
+			Sensor sensor = jessManipulator.getSensorByName((String)e.getItem());
+			ArrayList<String> fuzzySets = sensor.getFuzzySetNames();
+			buildComboBoxFuzzySetNamesSensors(fuzzySets);
+		}
+		
+	}
+	
+	private void buildComboBoxFuzzySetNamesSensors(ArrayList<String> fuzzySets) {
+		
+		comboBoxFuzzyValueSensor.removeAllItems();
+		
+		for(String set: fuzzySets) {
+			
+			comboBoxFuzzyValueSensor.addItem(set);
+			
+		}
 		
 	}
 	
