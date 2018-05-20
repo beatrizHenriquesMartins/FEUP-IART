@@ -211,7 +211,6 @@ public class JessManipulator {
 //		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
 //		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
 //		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
-//		sensors9.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
 //		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Heater 1"), "high"));
 //		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
 //		
@@ -221,7 +220,7 @@ public class JessManipulator {
 //		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
 
-//		jess.getRules();
+		System.out.println(jess.getRules());
 
 	}
 	
@@ -342,7 +341,10 @@ public class JessManipulator {
 		return devices;
 	}
 	
-	public void getRules() {
+	public ArrayList<String> getRules() {
+		
+		ArrayList<String> rules = new ArrayList<String>();
+		
 		@SuppressWarnings("unchecked")
 		Iterator<Object> it = rete.listDefrules();
 		while(it.hasNext()) {
@@ -350,12 +352,10 @@ public class JessManipulator {
 			Defrule rule = (Defrule) it.next();
 			if(rule.getName().indexOf("MAIN::defuzzify") != 0) {
 				
-				System.out.println(rule);
-				System.out.println(rule.getConditionalElements().getConditionalElement(0).isGroup());
-				System.out.println(rule.getAction(0));
-				System.out.println(rule.getDocstring());
+				rules.add(rule.getDocstring());
 			}
 		}
+		return rules;
 	}
 	
 	public void createNewVersatileRule(String ruleName, ArrayList<Pair<Sensor,Object>> sensors, ArrayList<Pair<Device,Object>> devices) throws JessException, FileNotFoundException, NameNotFoundException {
