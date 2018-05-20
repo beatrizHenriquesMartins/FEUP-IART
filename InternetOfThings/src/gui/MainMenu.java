@@ -357,9 +357,7 @@ public class MainMenu {
 	
 	class RulesModel extends AbstractListModel<String> {
 
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		@Override

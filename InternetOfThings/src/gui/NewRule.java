@@ -134,8 +134,7 @@ public class NewRule extends JFrame {
 		
 		btnAddSensor.addActionListener(new ButtonAddSensorListener());
 		
-		scrollPaneSensors.setViewportView(sensorsList);
-		
+		initializeSelectedSensorList();
 	}
 	
 	public void initializeSelectedSensorList() {
@@ -149,7 +148,6 @@ public class NewRule extends JFrame {
 		
 		comboBoxSensors = new JComboBox<>();
 		comboBoxSensors.setBounds(35, 52, 173, 27);
-		getContentPane().add(comboBoxSensors);
 				
 		for(Sensor sensor: sensors) {
 			
@@ -158,6 +156,7 @@ public class NewRule extends JFrame {
 		}
 		
 		comboBoxSensors.addItemListener(new ComboBoxSensorActionListener());
+		getContentPane().add(comboBoxSensors);
 		
 	}
 	
@@ -208,7 +207,7 @@ public class NewRule extends JFrame {
 			
 			String selectedSensorName = (String) comboBoxSensors.getSelectedItem();
 			Sensor selectedSensor = jessManipulator.getSensorByName(selectedSensorName);
-			String selectedFuzzySet = (String) comboBoxSensors.getSelectedItem();
+			String selectedFuzzySet = (String) comboBoxFuzzyValueSensor.getSelectedItem();
 			
 			String realValueString = realValueSensor.getText();
 			String operator = (String) comboBoxOperator.getSelectedItem();
@@ -228,7 +227,7 @@ public class NewRule extends JFrame {
 			}
 			
 			sensorsList.setModel(new SensorListModel());
-			
+						
 		}
 		
 	}
@@ -247,7 +246,25 @@ public class NewRule extends JFrame {
 		@Override
 		public String getElementAt(int index) {
 			
-			return selectedSensors.get(index).left.getName();
+			Pair<Sensor,Object> element = selectedSensors.get(index);
+			
+			String sensorName = element.left.getName();
+			
+			String rest = " ";
+
+			if(element.right instanceof String)
+				rest += " = " + element.right;
+			else {
+				
+				@SuppressWarnings("unchecked")
+				Pair<Double,String> pairStringOp = (Pair<Double, String>) element.right;
+				rest += pairStringOp.right + " " + pairStringOp.left;
+				
+			}
+				
+			
+			
+			return sensorName + rest;
 		}
 		
 		
