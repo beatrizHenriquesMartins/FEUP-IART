@@ -12,7 +12,7 @@
 (bind ?insideHumiditySensor (new HumiditySensor "Inside Humidity Sensor" 30 ?*humidityFvar* "insideHumiditySensor"))
 (add ?insideHumiditySensor)
 
-(bind ?outsideHumiditySensor (new HumiditySensor "Outside Humidity Sensor" 50 ?*humidityFvar* "outsideHumiditySensor"))
+(bind ?outsideHumiditySensor (new HumiditySensor "Outside Humidity Sensor" 20 ?*humidityFvar* "outsideHumiditySensor"))
 (add ?outsideHumiditySensor)
 
 (bind ?soilHumiditySensor (new HumiditySensor "Soil Humidity Sensor" 30 ?*humidityFvar* "soilHumiditySensor"))

@@ -31,21 +31,26 @@ public abstract class Sensor {
 	public void setRealValue(double newRealValue) throws XValueOutsideUODException, XValuesOutOfOrderException {
 		this.realValue = newRealValue;
 		this.fuzzyValue = new FuzzyValue(fuzzyVariable, new TriangleFuzzySet(realValue,realValue,realValue));
-		
+			
 	}
+	
+	
+	
 	public double getRealValue() {
 		return realValue;
 	}
+	
 	public FuzzyVariable getFuzzyVariable() {
 		return fuzzyVariable;
 	}
+	
 	public FuzzyValue getFuzzyValue() {
 		return fuzzyValue;
 	}
 	
 	@Override
 	public String toString() {
-		return "Sensor [name=" + name + "]";
+		return "Sensor [name=" + name + ", realValue: " + realValue + "]";
 	}
 	
 	public String getCode() {

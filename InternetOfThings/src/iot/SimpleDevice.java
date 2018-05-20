@@ -16,13 +16,12 @@ public abstract class SimpleDevice extends Device {
 	}
 
 	public void setState(String state) {
-		//TODO: states possibles
 		this.state = state;
 	}
 
 	@Override
 	public String toString() {
-		return "SimpleDevice [name=" + name + "state=" + state + "]";
+		return "SimpleDevice [name=" + name + ", state=" + state + "]";
 	}
 
 	

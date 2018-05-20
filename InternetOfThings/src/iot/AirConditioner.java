@@ -3,9 +3,6 @@ package iot;
 import nrc.fuzzy.FuzzyVariable;
 
 public class AirConditioner extends FuzzyDevice {
-
-//	private FuzzyValue fuzzyValueTemperature;
-//	private double realTemperature;
 	
 	private double fanSpeed;
 	
@@ -24,6 +21,11 @@ public class AirConditioner extends FuzzyDevice {
 	public double getFanSpeed() {
 		return fanSpeed;
 	}
-	
 
+
+	@Override
+	public String toString() {
+		return "AirConditioner [name= " + name + ", fanSpeed=" + fanSpeed + "]";
+	}
+	
 }

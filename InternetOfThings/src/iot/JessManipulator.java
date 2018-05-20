@@ -1,9 +1,15 @@
 package iot;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+
+import javax.naming.NameNotFoundException;
 
 import jess.*;
 import nrc.fuzzy.XValueOutsideUODException;
@@ -16,38 +22,204 @@ public class JessManipulator {
 	String rulesFileName = "res/rules.clp";
 	
 
-	public static void main(String[] args) throws JessException, XValueOutsideUODException, XValuesOutOfOrderException {
+	public static void main(String[] args) throws JessException, XValueOutsideUODException, XValuesOutOfOrderException, FileNotFoundException, NameNotFoundException {
 
 		JessManipulator jess = new JessManipulator();
-		
+//		
 //		System.out.println(jess.getSensors());
 //		System.out.println(jess.getFuzzyDevices());
-		
-//		ArrayList<Pair<Sensor,String>> sensors = new ArrayList<>();
-//		ArrayList<Pair<FuzzyDevice,String>> devices = new ArrayList<>();
+//
+//		//inicio teste F -> F
+//		ArrayList<Pair<Sensor,Object>> sensors = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices = new ArrayList<>();
 //		sensors.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), "hot"));
 //		sensors.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
 //		devices.add(new Pair<>(jess.getFuzzyDeviceByName("Room 1 Air Conditioned"), "high"));
-//		jess.createNewFuzzyRule("testFuzzyRule", sensors, devices);
+//		jess.createNewVersatileRule("testFuzzyRule", sensors, devices);
+//		
+//		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"), 80);
+//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 28.9);
+//
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		
+//		//fim teste F -> F
+//		
+//		
+//		//Inicio teste N -> F
+//		ArrayList<Pair<Sensor,Object>> sensors2 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices2 = new ArrayList<>();
+//		sensors2.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), new Pair<>(15.0,"<")));
+//		sensors2.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), new Pair<>(50.0,">=")));
+//		devices2.add(new Pair<>(jess.getFuzzyDeviceByName("Room 1 Air Conditioned"), "low"));
+//		devices2.add(new Pair<>(jess.getFuzzyDeviceByName("Room 2 Air Conditioned"), "low"));
+//		jess.createNewVersatileRule("testSimpleRule", sensors2, devices2);
+//		
+//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 1.9);
+//		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"), 80);
+//		
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		System.out.println(jess.getDeviceByName("Room 2 Air Conditioned"));
+//		//Fim teste N -> F
+//
+//
+//
+//		//inicio teste NF -> F
+//		ArrayList<Pair<Sensor,Object>> sensors3 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices3 = new ArrayList<>();
+//		sensors3.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), new Pair<>(32.0,">=")));
+//		sensors3.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
+//		devices3.add(new Pair<>(jess.getFuzzyDeviceByName("Room 1 Air Conditioned"), "low"));
+//		devices3.add(new Pair<>(jess.getFuzzyDeviceByName("Room 2 Air Conditioned"), "high"));
+//		jess.createNewVersatileRule("testSimpleRuleNFNF", sensors3, devices3);
+//		
+//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"),35.0);
+//		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"),81.0);
+//		
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		System.out.println(jess.getDeviceByName("Room 2 Air Conditioned"));
+//		//fim teste NF -> F
+//		
+//		
+//		
+//		
+//		//inicio teste F -> N	
+//		ArrayList<Pair<Sensor,Object>> sensors4 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices4 = new ArrayList<>();
+//		sensors4.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), "cold"));
+//		sensors4.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
+//		devices4.add(new Pair<>(jess.getDeviceByName("Room 1 Air Conditioned"), 995.0));
+//		devices4.add(new Pair<>(jess.getDeviceByName("Living Room Window 2"), "Open"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors4, devices4);
+//		
+//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 15.0);
+//		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"), 70.1);
+//		
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		System.out.println(jess.getDeviceByName("Living Room Window 2"));
+//		//fim teste F -> N
+//		
+//		
+//		
+//		
+//		//inicio teste N -> N		
+//		ArrayList<Pair<Sensor,Object>> sensors5 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices5 = new ArrayList<>();
+//		sensors5.add(new Pair<>(jess.getSensorByName("Garden PH Sensor"), new Pair<>(3.0,"<")));
+//		sensors5.add(new Pair<>(jess.getSensorByName("Outside Humidity Sensor"), new Pair<>(85.0,">=")));
+//		sensors5.add(new Pair<>(jess.getSensorByName("Garden Temperature Sensor"), new Pair<>(30.0,">")));
+//		devices5.add(new Pair<>(jess.getFuzzyDeviceByName("Garden Irrigation System"), 90.0));
+//		jess.createNewVersatileRule("testFuzzyRulePh", sensors5, devices5);
+//		
+//		jess.updateSensor(jess.getSensorByName("Garden PH Sensor"),2.3);
+//		jess.updateSensor(jess.getSensorByName("Outside Humidity Sensor"),85.1);
+//		jess.updateSensor(jess.getSensorByName("Garden Temperature Sensor"),30.1);
+//
+//		System.out.println(jess.getDeviceByName("Garden Irrigation System"));
+//		//fim teste N -> N
+//		
+//
+//		//inicio teste NF -> N
+//		ArrayList<Pair<Sensor,Object>> sensors6 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices6 = new ArrayList<>();
+//		sensors6.add(new Pair<>(jess.getSensorByName("Garden PH Sensor"), "very_acid"));
+//		sensors6.add(new Pair<>(jess.getSensorByName("Outside Humidity Sensor"), "humid"));
+//		sensors6.add(new Pair<>(jess.getSensorByName("Garden Temperature Sensor"), new Pair<>(30.0,">")));
+//		devices6.add(new Pair<>(jess.getFuzzyDeviceByName("Garden Irrigation System"), "slightly high"));
+//		devices6.add(new Pair<>(jess.getFuzzyDeviceByName("Living Room Air Conditioned"), "very high"));
+//
+//		jess.createNewVersatileRule("testFuzzyRulePh", sensors6, devices6);
+//		
+//		jess.updateSensor(jess.getSensorByName("Garden PH Sensor"),3.1);
+//		jess.updateSensor(jess.getSensorByName("Outside Humidity Sensor"),100.0);
+//		jess.updateSensor(jess.getSensorByName("Garden Temperature Sensor"),30.1);
+//
+//		System.out.println(jess.getDeviceByName("Garden Irrigation System"));
+//		System.out.println(jess.getDeviceByName("Living Room Air Conditioned"));
+//		//fim teste NF -> N
+//		
+//		
+//		//inicio teste F -> NF	
+//		ArrayList<Pair<Sensor,Object>> sensors7 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices7 = new ArrayList<>();
+//		sensors7.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), "hot"));
+//		sensors7.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
+//		devices7.add(new Pair<>(jess.getDeviceByName("Room 1 Air Conditioned"), "low"));
+//		devices7.add(new Pair<>(jess.getDeviceByName("Living Room Window 2"), "Open"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors7, devices7);
+//		
+//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 25.0);
+//		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"), 70.1);
+//		
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		System.out.println(jess.getDeviceByName("Living Room Window 2"));
+//		//fim teste F -> NF
+//		
+//		
+//		//inicio teste N -> NF
+//		ArrayList<Pair<Sensor,Object>> sensors7 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices7 = new ArrayList<>();
+//		sensors7.add(new Pair<>(jess.getSensorByName("Garden PH Sensor"), new Pair<>(3.0,"<")));
+//		sensors7.add(new Pair<>(jess.getSensorByName("Outside Humidity Sensor"), new Pair<>(85.0,">=")));
+//		sensors7.add(new Pair<>(jess.getSensorByName("Garden Temperature Sensor"), new Pair<>(30.0,">")));
+//		devices7.add(new Pair<>(jess.getDeviceByName("Room 1 Air Conditioned"), 850.0));
+//		devices7.add(new Pair<>(jess.getDeviceByName("Garden Irrigation System"), "high"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors7, devices7);
+//		
+//		jess.updateSensor(jess.getSensorByName("Garden PH Sensor"), 2.0);
+//		jess.updateSensor(jess.getSensorByName("Outside Humidity Sensor"), 90.1);
+//		jess.updateSensor(jess.getSensorByName("Garden Temperature Sensor"), 36.1);
+//		
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		System.out.println(jess.getDeviceByName("Garden Irrigation System"));	
+//		//fim teste N -> NF
+//		
+//		
+//		
+//		
+//		//inicio teste NF -> NF
+//		ArrayList<Pair<Sensor,Object>> sensors7 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices7 = new ArrayList<>();
+//		sensors7.add(new Pair<>(jess.getSensorByName("Garden PH Sensor"), new Pair<>(3.0,"<")));
+//		sensors7.add(new Pair<>(jess.getSensorByName("Outside Humidity Sensor"), new Pair<>(85.0,">=")));
+//		sensors7.add(new Pair<>(jess.getSensorByName("Garden Temperature Sensor"), "hot"));
+//		devices7.add(new Pair<>(jess.getDeviceByName("Room 1 Air Conditioned"), 850.0));
+//		devices7.add(new Pair<>(jess.getDeviceByName("Garden Irrigation System"), "high"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors7, devices7);
+//		
+//		jess.updateSensor(jess.getSensorByName("Garden PH Sensor"), 2.9);
+//		jess.updateSensor(jess.getSensorByName("Outside Humidity Sensor"), 90.1);
+//		jess.updateSensor(jess.getSensorByName("Garden Temperature Sensor"), 20.1);
+//		
+//		System.out.println(jess.getDeviceByName("Room 1 Air Conditioned"));
+//		System.out.println(jess.getDeviceByName("Garden Irrigation System"));	
+//		//fim teste NF -> NF	
 		
-		System.out.println(jess.getDeviceByName("Living Room Window 1"));
-		ArrayList<Pair<Sensor,String>> sensors2 = new ArrayList<>();
-		ArrayList<Pair<Device,String>> devices2 = new ArrayList<>();
-		sensors2.add(new Pair<>(jess.getSensorByName("Room 1 Temperature Sensor"), "hot"));
-		sensors2.add(new Pair<>(jess.getSensorByName("Inside Humidity Sensor"), "humid"));
-		devices2.add(new Pair<>(jess.getDeviceByName("Living Room Window 1"), "Open"));
-		jess.createNewRule("testSimpleRule", sensors2, devices2);
-		System.out.println(jess.getDeviceByName("Living Room Window 1"));
-
-		jess.updateSensor(jess.getSensorByName("Inside Humidity Sensor"), 100);
-		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 24.9);
-//		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 14.9);
-		jess.updateSensor(jess.getSensorByName("Room 1 Temperature Sensor"), 27.9);
-		System.out.println(jess.getDeviceByName("Living Room Window 1"));
-
-//		System.out.println(jess.getSensors().get(0).getFuzzySetNames());
-//		System.out.println(jess.getFuzzyDevices().get(0).getFuzzySetNames());
-			
+//		ArrayList<Pair<Sensor,Object>> sensors8 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices8 = new ArrayList<>();
+//		sensors8.add(new Pair<>(jess.getSensorByName("Room 1 Light Sensor"), "high"));
+////		sensors8.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
+//		devices8.add(new Pair<>(jess.getDeviceByName("Living Room Window 1 Blind"), "high"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors8, devices8);
+//		
+//		jess.updateSensor(jess.getSensorByName("Room 1 Light Sensor"), 6201.0);
+//		
+//		System.out.println(jess.getDeviceByName("Living Room Window 1 Blind"));	
+//		System.out.println(jess.getSensorByName("Room 1 Light Sensor"));	
+//		
+		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
+		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
+		sensors9.add(new Pair<>(jess.getSensorByName("Clock"), "late_morning"));
+//		sensors8.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
+		devices9.add(new Pair<>(jess.getDeviceByName("Room 2 Alarm"), "Firing"));
+		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
+		
+		jess.updateSensor(jess.getSensorByName("Clock"), 490.0);
+		
+		System.out.println(jess.getDeviceByName("Room 2 Alarm"));	
+		System.out.println(jess.getSensorByName("Large Bathroom Temperature Sensor"));	
+		
+		
+		
 	}
 	
 	public JessManipulator() {
@@ -57,21 +229,31 @@ public class JessManipulator {
 
 	private void init() {
 						
-		try {			
+		try {	
+			
 			rete.eval("(import iot.*)");
 			rete.eval("(load-package nrc.fuzzy.jess.FuzzyFunctions)");
 			rete.eval("(import nrc.fuzzy.*)");
+			
+			File dir = new File("res/sensores_devices");
+			File[] sensorsAndDevicesDefinitions = dir.listFiles();
+			
+			if(sensorsAndDevicesDefinitions != null) {
+				
+				for(File file : sensorsAndDevicesDefinitions) {
+					
+					String path = file.getPath();
+					rete.eval("(batch "+ path +")");
+				}
+				
+			}
 
-			rete.eval("(batch res/sensor_temperature.clp)");
-			rete.eval("(batch res/sensor_humidity.clp)");
-			rete.eval("(batch res/device_window.clp)");
-			rete.eval("(batch res/device_ac.clp)");	
-//			rete.eval("(batch " + rulesFileName + ")");			
+			//rete.eval("(batch " + rulesFileName + ")");			
 			rete.run();
+		
 		} catch (JessException e) {
-//			System.err.println("Cannot batch jess files.");
-//			System.exit(1);
 			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 	
@@ -153,43 +335,88 @@ public class JessManipulator {
 		return devices;
 	}
 	
-	public void createNewRule(String ruleName, ArrayList<Pair<Sensor,String>> sensors, ArrayList<Pair<Device,String>> devices) throws JessException {
+	public void createNewVersatileRule(String ruleName, ArrayList<Pair<Sensor,Object>> sensors, ArrayList<Pair<Device,Object>> devices) throws JessException, FileNotFoundException, NameNotFoundException {
 		
 		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
 		PrintWriter out = new PrintWriter(outBuffer);
 		
-		out.println("(defrule " + ruleName);
+		out.println("(defrule " + ruleName + "\n");
 		
 		for (int i = 0; i < sensors.size(); i++) {
+			
 			Sensor sensor = sensors.get(i).left;
-			String value = sensors.get(i).right;
 			
 			out.print("\t(" + sensor.type + " ");
-			out.print("(name \"" + sensor.getName() + "\") ");
-			out.println("(fuzzyValue ?v" + i + "&:(fuzzy-match ?v" + i + " \"" + value + "\")))");
+			
+			if(sensors.get(i).right instanceof String) {
+				
+				String value = (String) sensors.get(i).right;
+				
+				out.print("(name \"" + sensor.getName() + "\") ");
+				out.println("(fuzzyValue ?v" + i + "&:(fuzzy-match ?v" + i + " \"" + value + "\")))");
+				
+			}
+			
+			else {
+				
+				@SuppressWarnings("unchecked")
+				Pair<Double,String> pair = (Pair<Double,String>) sensors.get(i).right;
+				Double value = pair.left;
+				Operator operator = Operator.type(pair.right);
+				out.println("{name == \"" + sensor.getName() + "\" && realValue  " + operator.token + " " + value + "})");
+				
+			}
+				
 		}
 		
 		out.println("\n\t=>\n");
 		
-		
 		for (int i = 0; i < devices.size(); i++) {
 			Device device = devices.get(i).left;
-			String value = devices.get(i).right;		
+			Object value = devices.get(i).right;
 			
-			out.println("(?" + device.jessVariableName + " setState \"" + value + "\"))");
+			//simple device only state needed
+			if(device instanceof SimpleDevice)
+				out.println("\t(?" + device.jessVariableName + " setState \"" + value + "\")");
+			
+			//complex device, fuzzy set or real value
+			else {
+				
+				FuzzyDevice fuzzyDevice = (FuzzyDevice) device;
+				
+				//crisp value
+				if(value instanceof Double) {
+					
+					String deviceVariableMethod = "set" + fuzzyDevice.fuzzyVariableName.substring(0,1).toUpperCase() + fuzzyDevice.fuzzyVariableName.substring(1);
+					out.println("\t(?" + device.jessVariableName + " " + deviceVariableMethod + " " + value + ")");
+					
+				}
+				
+				//fuzzy value
+				else 
+					out.println("\t(assert (" + device.getCode() + " (new FuzzyValue ?*" + fuzzyDevice.fuzzyVariableName + "* \"" + value + "\")))");
+					
+			}
+				
 		}
-		out.close();
-//		System.out.println(outBuffer.toString());
-		rete.eval(outBuffer.toString());
-		rete.run();
-	}
 		
-	public void createNewFuzzyRule(String ruleName, ArrayList<Pair<Sensor,String>> sensors, ArrayList<Pair<FuzzyDevice,String>> devices) throws JessException {
+		out.println(")");	
+		
+		out.close();
+		String newRule = outBuffer.toString();
+		rete.eval(newRule);
+		rete.run();
+		
+		saveRuleToFile(newRule);
+		
+	}
+	
+	public void createNewRuleFF(String ruleName, ArrayList<Pair<Sensor,String>> sensors, ArrayList<Pair<FuzzyDevice,String>> devices) throws JessException, FileNotFoundException {
 		
 		ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
 		PrintWriter out = new PrintWriter(outBuffer);
 		
-		out.println("(defrule " + ruleName);
+		out.println("(defrule " + ruleName + "\n");
 		
 		for (int i = 0; i < sensors.size(); i++) {
 			Sensor sensor = sensors.get(i).left;
@@ -206,14 +433,21 @@ public class JessManipulator {
 			FuzzyDevice device = devices.get(i).left;
 			String value = devices.get(i).right;
 			
-			out.println("\t(assert (" + device.getCode() + " (new FuzzyValue ?*" + device.fuzzyVariableName + "* \"" + value + "\"))))");
+			out.println("\t(assert (" + device.getCode() + " (new FuzzyValue ?*" + device.fuzzyVariableName + "* \"" + value + "\")))");
 		}
+		
+		out.println(")");
+		
 		out.close();
-//		System.out.println(outBuffer.toString());
-		rete.eval(outBuffer.toString());
+		String newRule = outBuffer.toString();
+		
+		rete.eval(newRule);
 		rete.run();
+		
+		saveRuleToFile(newRule);
+		
+		
 	}
-	
 	
 	void updateSensor(Sensor sensor, double newValue) throws XValueOutsideUODException, XValuesOutOfOrderException, JessException {
 		
@@ -223,8 +457,8 @@ public class JessManipulator {
 		
 	}
 	
-	
-	static class Pair<T, V> {
+	private static class Pair<T, V> {
+		
 		public T left;
 		public V right;
 		public Pair(T left, V right) {
@@ -236,7 +470,59 @@ public class JessManipulator {
 			return "(" + left + ", " + right + ")";
 		}
 		
+	}
+	
+	private void saveRuleToFile(String rule) throws FileNotFoundException {
+		
+		PrintWriter pw = new PrintWriter(new FileOutputStream(new File(rulesFileName), true));
+		pw.println(rule);
+		pw.close();
 		
 	}
+
+	private static enum Operator {
+		
+		GREATER(">"),
+		GREATER_EQUAL(">="),
+		LESS("<"),
+		LESS_EQUAL( "<="),
+		EQUALS("=="),
+		DIFFERENT("!=");
+		
+		static final ArrayList<String> types = new ArrayList<String>(Arrays.asList(">",">=","<","<=","==","!="));
+		
+		public String token;
+		
+		Operator(String token) {
+			this.token = token;
+		}
+		
+		static Operator type(String text) throws NameNotFoundException {
+			
+			switch(types.indexOf(text)) {
+			
+				case 0:
+					return Operator.GREATER;
+				case 1:
+					return Operator.GREATER_EQUAL;
+				case 2:
+					return Operator.LESS;
+				case 3:
+					return Operator.LESS_EQUAL;
+				case 4:
+					return Operator.EQUALS;
+				case 5:
+					return Operator.DIFFERENT;
+				default:
+					throw new NameNotFoundException("Invalid Operator Name");
+			
+			}
+					
+		}
+				
+	}
+	
+	
+	
 }
 

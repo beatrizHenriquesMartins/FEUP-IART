@@ -12,13 +12,6 @@
 (bind ?airConditionedLivingRoom (new AirConditioner "Living Room Air Conditioned" ?*fanSpeed* "airConditionedLivingRoom"))
 (add ?airConditionedLivingRoom)
 
-(bind ?airConditionedRoom1 (new AirConditioner "Room 1 Air Conditioned" ?*fanSpeed* "airConditionedRoom1"))
-(add ?airConditionedRoom1)
-
-(bind ?airConditionedRoom2 (new AirConditioner "Room 2 Air Conditioned" ?*fanSpeed* "airConditionedRoom2"))
-(add ?airConditionedRoom2)
-
-
 (defrule defuzzifyACLivingRoom 
 
     (declare (salience -100))
@@ -27,11 +20,14 @@
 
     =>
 
-    (bind ?crispFanSpeedLivingRoom (?fuzzyFanSpeedLivingRoom momentDefuzzify))    
+    (bind ?crispFanSpeedLivingRoom (?fuzzyFanSpeedLivingRoom weightedAverageDefuzzify))    
     (?airConditionedLivingRoom setFanSpeed ?crispFanSpeedLivingRoom)
     (printout t "Fan ac living room: "(?airConditionedLivingRoom getFanSpeed) crlf)
     (retract ?fanSpeedFactLivingRoom)
 )
+
+(bind ?airConditionedRoom1 (new AirConditioner "Room 1 Air Conditioned" ?*fanSpeed* "airConditionedRoom1"))
+(add ?airConditionedRoom1)
 
 (defrule defuzzifyACRoom1 
 
@@ -40,8 +36,24 @@
 
     =>
 
-    (bind ?crispFanSpeedRoom1 (?fuzzyFanSpeedRoom1 momentDefuzzify))
+    (bind ?crispFanSpeedRoom1 (?fuzzyFanSpeedRoom1 weightedAverageDefuzzify))
     (?airConditionedRoom1 setFanSpeed ?crispFanSpeedRoom1)
     (printout t "Fan ac room1: "(?airConditionedRoom1 getFanSpeed) crlf)
     (retract ?fanSpeedFactRoom1)
+) 
+
+(bind ?airConditionedRoom2 (new AirConditioner "Room 2 Air Conditioned" ?*fanSpeed* "airConditionedRoom2"))
+(add ?airConditionedRoom2)
+
+(defrule defuzzifyACRoom2 
+
+    (declare (salience -100))    
+    ?fanSpeedFactRoom2 <- (Room_2_Air_Conditioned ?fuzzyFanSpeedRoom2)
+
+    =>
+
+    (bind ?crispFanSpeedRoom2 (?fuzzyFanSpeedRoom2 weightedAverageDefuzzify))
+    (?airConditionedRoom2 setFanSpeed ?crispFanSpeedRoom2)
+    (printout t "Fan ac room2: "(?airConditionedRoom2 getFanSpeed) crlf)
+    (retract ?fanSpeedFactRoom2)
 ) 

@@ -9,11 +9,10 @@ public abstract class FuzzyDevice extends Device {
 	FuzzyVariable fuzzyVariable;
 	String fuzzyVariableName;
 
-
-	public FuzzyDevice(String name, String fuzzyVariableName, FuzzyVariable fuzzyVariableFanSpeed, String jessVariableName) {
+	public FuzzyDevice(String name, String fuzzyVariableName, FuzzyVariable fuzzyVariable, String jessVariableName) {
 		super(name, jessVariableName);
 		this.fuzzyVariableName = fuzzyVariableName;
-		this.fuzzyVariable = fuzzyVariableFanSpeed;
+		this.fuzzyVariable = fuzzyVariable;
 	}
 
 
