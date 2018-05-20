@@ -344,8 +344,7 @@ public class MainMenu {
 			Sensor sensor = jessManipulator.getSensorByName((String)table_sensores.getValueAt(rowIndex, 0));
 			Double newValue = Double.parseDouble((String) aValue);
 			
-			
-			
+		
 			try {
 				jessManipulator.updateSensor(sensor, newValue);
 				tableDevices.setModel(new DeviceModel());
@@ -380,8 +379,6 @@ public class MainMenu {
 		}
 		
 	}
-	
-	
-	
+		
 	
 }
