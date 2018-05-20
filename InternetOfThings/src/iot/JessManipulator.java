@@ -208,17 +208,17 @@ public class JessManipulator {
 //		System.out.println(jess.getDeviceByName("Living Room Window 1 Blind"));	
 //		System.out.println(jess.getSensorByName("Room 1 Light Sensor"));	
 		
-		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
-		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
-		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
-		sensors9.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
-		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Heater 1"), "high"));
-		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
-		
-		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
-		
-		System.out.println(jess.getDeviceByName("Living Room Heater 1"));	
-		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
+//		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
+//		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
+//		sensors9.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
+//		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Heater 1"), "high"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
+//		
+//		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
+//		
+//		System.out.println(jess.getDeviceByName("Living Room Heater 1"));	
+//		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
 //		jess.getRules();
 	}
