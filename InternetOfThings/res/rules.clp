@@ -1496,3 +1496,93 @@
 	(?alarmRoom2 setState "Firing")
 )
 
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Air_Conditioned (new FuzzyValue ?*fanSpeed* "medium")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "medium")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "medium")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "medium")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "medium")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "high")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Heater_1 (new FuzzyValue ?*heaterTemperature* "high")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Air_Conditioned (new FuzzyValue ?*fanSpeed* "high")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Air_Conditioned (new FuzzyValue ?*fanSpeed* "high")))
+)
+
+(defrule testSimpleRuleF-N
+
+	(TemperatureSensor (name "Living Room Temperature Sensor") (fuzzyValue ?v0&:(fuzzy-match ?v0 "cold")))
+
+	=>
+
+	(assert (Living_Room_Air_Conditioned (new FuzzyValue ?*fanSpeed* "high")))
+)
+

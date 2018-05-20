@@ -208,15 +208,15 @@ public class JessManipulator {
 //		
 		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
 		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
-		sensors9.add(new Pair<>(jess.getSensorByName("Clock"), "late_morning"));
+		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
 //		sensors8.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
-		devices9.add(new Pair<>(jess.getDeviceByName("Room 2 Alarm"), "Firing"));
+		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Air Conditioned"), "high"));
 		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
 		
-		jess.updateSensor(jess.getSensorByName("Clock"), 490.0);
+		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
 		
-		System.out.println(jess.getDeviceByName("Room 2 Alarm"));	
-		System.out.println(jess.getSensorByName("Large Bathroom Temperature Sensor"));	
+		System.out.println(jess.getDeviceByName("Living Room Air Conditioned"));	
+		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
 		
 		
