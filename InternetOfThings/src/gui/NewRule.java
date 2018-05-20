@@ -82,7 +82,7 @@ public class NewRule extends JFrame {
 		scrollPaneSensors.setBounds(36, 117, 544, 120);
 		getContentPane().add(scrollPaneSensors);
 		
-		JLabel lblFuzzyValue = new JLabel("Value");
+		JLabel lblFuzzyValue = new JLabel("Fuzzy Value");
 		lblFuzzyValue.setBounds(221, 60, 90, 16);
 		getContentPane().add(lblFuzzyValue);
 		
@@ -103,7 +103,7 @@ public class NewRule extends JFrame {
 		comboBoxValueDevice.setBounds(235, 277, 111, 27);
 		getContentPane().add(comboBoxValueDevice);
 		
-		JLabel label = new JLabel("Fuzzy Value");
+		JLabel label = new JLabel("Value");
 		label.setBounds(241, 259, 90, 16);
 		getContentPane().add(label);
 		
