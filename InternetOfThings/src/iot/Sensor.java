@@ -73,4 +73,9 @@ public abstract class Sensor {
 		
 		return result;
 	}
+	public String getType() {
+		return type;
+	}
+	
+	
 }

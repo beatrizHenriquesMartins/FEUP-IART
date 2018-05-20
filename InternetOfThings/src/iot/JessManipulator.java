@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import javax.naming.NameNotFoundException;
@@ -206,17 +208,17 @@ public class JessManipulator {
 //		System.out.println(jess.getDeviceByName("Living Room Window 1 Blind"));	
 //		System.out.println(jess.getSensorByName("Room 1 Light Sensor"));	
 //		
-		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
-		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
-		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
-//		sensors8.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
-		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Air Conditioned"), "high"));
-		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
-		
-		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
-		
-		System.out.println(jess.getDeviceByName("Living Room Air Conditioned"));	
-		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
+//		ArrayList<Pair<Sensor,Object>> sensors9 = new ArrayList<>();
+//		ArrayList<Pair<Device,Object>> devices9 = new ArrayList<>();
+//		sensors9.add(new Pair<>(jess.getSensorByName("Living Room Temperature Sensor"), "cold"));
+////		sensors8.add(new Pair<>(jess.getSensorByName("Garden Movement Sensor"), new Pair<Double,String>(1.0,"==")));
+//		devices9.add(new Pair<>(jess.getDeviceByName("Living Room Heater 1"), "high"));
+//		jess.createNewVersatileRule("testSimpleRuleF-N", sensors9, devices9);
+//		
+//		jess.updateSensor(jess.getSensorByName("Living Room Temperature Sensor"), 15.0);
+//		
+//		System.out.println(jess.getDeviceByName("Living Room Heater 1"));	
+//		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
 		
 		
@@ -249,7 +251,7 @@ public class JessManipulator {
 				
 			}
 
-			//rete.eval("(batch " + rulesFileName + ")");			
+			rete.eval("(batch " + rulesFileName + ")");			
 			rete.run();
 		
 		} catch (JessException e) {
@@ -271,6 +273,9 @@ public class JessManipulator {
 			}		
 			
 		}
+		
+		Collections.sort(sensors, new SensorComparator());
+		
 		return sensors;
 	}
 	
@@ -297,6 +302,7 @@ public class JessManipulator {
 			}		
 			
 		}
+		Collections.sort(devices, new DeviceComparator());
 		return devices;
 	}
 	
@@ -450,7 +456,7 @@ public class JessManipulator {
 		
 	}
 	
-	void updateSensor(Sensor sensor, double newValue) throws XValueOutsideUODException, XValuesOutOfOrderException, JessException {
+	public void updateSensor(Sensor sensor, double newValue) throws XValueOutsideUODException, XValuesOutOfOrderException, JessException {
 		
 		sensor.setRealValue(newValue);
 		rete.updateObject(sensor);
@@ -521,6 +527,26 @@ public class JessManipulator {
 					
 		}
 				
+	}
+	
+	public class DeviceComparator implements Comparator<Device> {
+
+		@Override
+		public int compare(Device o1, Device o2) {
+						
+			return o1.getName().compareTo(o2.getName());
+		}
+		
+	}
+	
+	public class SensorComparator implements Comparator<Sensor> {
+
+		@Override
+		public int compare(Sensor o1, Sensor o2) {
+						
+			return o1.getName().compareTo(o2.getName());
+		}
+		
 	}
 	
 	
