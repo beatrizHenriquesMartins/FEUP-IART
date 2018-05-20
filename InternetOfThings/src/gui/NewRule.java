@@ -3,6 +3,7 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTextField;
 
 import iot.Device;
@@ -18,6 +19,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
+import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 
 public class NewRule extends JFrame {
@@ -40,6 +42,7 @@ public class NewRule extends JFrame {
 	private JButton btnAddDevice;
 	
 	private ArrayList<Pair<Sensor,Object>> selectedSensors = new ArrayList<>();
+	private JList<String> sensorsList = new JList<>();
 	private ArrayList<Pair<Device,Object>> selectedDevices = new ArrayList<>();
 	
 	
@@ -66,9 +69,7 @@ public class NewRule extends JFrame {
 		getContentPane().add(realValueSensor);
 		realValueSensor.setColumns(10);
 		
-		comboBoxOperator = new JComboBox<>();
-		comboBoxOperator.setBounds(435, 52, 52, 27);
-		getContentPane().add(comboBoxOperator);
+		
 		
 		scrollPaneSensors = new JScrollPane();
 		scrollPaneSensors.setBounds(35, 91, 544, 120);
@@ -127,20 +128,30 @@ public class NewRule extends JFrame {
 		btnAddDevice.setBounds(499, 250, 80, 29);
 		getContentPane().add(btnAddDevice);
 		
-		initializeComboBoxSensors();
+		initializeComboBoxSensors(jessManipulator.getSensors());
+		initializeComboBoxFuzzySetNamesSensors(jessManipulator.getSensorByName((String)comboBoxSensors.getSelectedItem()).getFuzzySetNames()) ;
+		initializeComboBoxOperators();
 		
-		buildComboBoxFuzzySetNamesSensors(jessManipulator.getSensorByName((String)comboBoxSensors.getSelectedItem()).getFuzzySetNames()) ;
+		btnAddSensor.addActionListener(new ButtonAddSensorListener());
 		
+		scrollPaneSensors.setViewportView(sensorsList);
+		
+	}
+	
+	public void initializeSelectedSensorList() {
+		
+		sensorsList.setModel(new SensorListModel());
+		scrollPaneSensors.setViewportView(sensorsList);
 		
 	}
 
-	public void initializeComboBoxSensors() {
+	public void initializeComboBoxSensors(ArrayList<Sensor> sensors) {
 		
 		comboBoxSensors = new JComboBox<>();
 		comboBoxSensors.setBounds(35, 52, 173, 27);
 		getContentPane().add(comboBoxSensors);
-		
-		for(Sensor sensor: jessManipulator.getSensors()) {
+				
+		for(Sensor sensor: sensors) {
 			
 			comboBoxSensors.addItem(sensor.getName());
 			
@@ -158,12 +169,12 @@ public class NewRule extends JFrame {
 			
 			Sensor sensor = jessManipulator.getSensorByName((String)e.getItem());
 			ArrayList<String> fuzzySets = sensor.getFuzzySetNames();
-			buildComboBoxFuzzySetNamesSensors(fuzzySets);
+			initializeComboBoxFuzzySetNamesSensors(fuzzySets);
 		}
 		
 	}
 	
-	private void buildComboBoxFuzzySetNamesSensors(ArrayList<String> fuzzySets) {
+	private void initializeComboBoxFuzzySetNamesSensors(ArrayList<String> fuzzySets) {
 		
 		comboBoxFuzzyValueSensor.removeAllItems();
 		
@@ -172,6 +183,74 @@ public class NewRule extends JFrame {
 			comboBoxFuzzyValueSensor.addItem(set);
 			
 		}
+		
+	}
+	
+	private void initializeComboBoxOperators() {
+		
+		String[] ops = new String[] {">",">=","<","<=","==","!="};
+		comboBoxOperator = new JComboBox<>();
+		comboBoxOperator.setBounds(435, 52, 61, 27);
+		
+		for(String op: ops) {
+			
+			comboBoxOperator.addItem(op);
+			
+		}
+		getContentPane().add(comboBoxOperator);
+		
+	}
+	
+	class ButtonAddSensorListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			String selectedSensorName = (String) comboBoxSensors.getSelectedItem();
+			Sensor selectedSensor = jessManipulator.getSensorByName(selectedSensorName);
+			String selectedFuzzySet = (String) comboBoxSensors.getSelectedItem();
+			
+			String realValueString = realValueSensor.getText();
+			String operator = (String) comboBoxOperator.getSelectedItem();
+						
+			if(realValueString.equals("")) {
+				
+				selectedSensors.add(new Pair<Sensor, Object>(selectedSensor,selectedFuzzySet));
+				
+			}
+			
+			else {
+				
+				Double realValue = Double.parseDouble(realValueString);
+				Pair<Double,String> pairValueOp = new Pair<>(realValue,operator);
+				selectedSensors.add(new Pair<Sensor, Object>(selectedSensor, pairValueOp));
+				
+			}
+			
+			sensorsList.setModel(new SensorListModel());
+			
+		}
+		
+	}
+	
+	class SensorListModel extends AbstractListModel<String> {
+
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public int getSize() {
+			
+			return selectedSensors.size();
+		}
+
+		@Override
+		public String getElementAt(int index) {
+			
+			return selectedSensors.get(index).left.getName();
+		}
+		
+		
 		
 	}
 	
