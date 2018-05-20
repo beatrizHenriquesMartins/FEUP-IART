@@ -38,5 +38,6 @@ public abstract class FuzzyDevice extends Device {
 		return result;
 	}
 
+
 	
 }

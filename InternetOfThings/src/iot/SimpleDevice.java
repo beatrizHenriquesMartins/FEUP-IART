@@ -23,6 +23,10 @@ public abstract class SimpleDevice extends Device {
 	public String toString() {
 		return "SimpleDevice [name=" + name + ", state=" + state + "]";
 	}
+	
+	public String[] getSimpleSetNames() {
+		return possibleStates;
+	}
 
 	
 
