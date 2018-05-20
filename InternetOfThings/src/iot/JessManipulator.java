@@ -220,9 +220,6 @@ public class JessManipulator {
 //		System.out.println(jess.getDeviceByName("Living Room Heater 1"));	
 //		System.out.println(jess.getSensorByName("Living Room Temperature Sensor"));	
 		
-		
-		
-		
 	}
 	
 	public JessManipulator() {
@@ -464,7 +461,7 @@ public class JessManipulator {
 		
 	}
 	
-	private static class Pair<T, V> {
+	public static class Pair<T, V> {
 		
 		public T left;
 		public V right;

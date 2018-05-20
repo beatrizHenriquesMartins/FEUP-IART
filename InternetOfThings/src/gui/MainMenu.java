@@ -1,10 +1,12 @@
 package gui;
 
 import java.awt.EventQueue;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.SpringLayout;
 import javax.swing.table.AbstractTableModel;
 
@@ -29,8 +31,10 @@ import nrc.fuzzy.XValuesOutOfOrderException;
 import javax.swing.JScrollPane;
 
 import javax.swing.JTable;
+import javax.swing.AbstractListModel;
+import javax.swing.JButton;
 
-public class mainMenu {
+public class MainMenu {
 
 	private JFrame frame;
 	private JTable table_sensores;
@@ -39,7 +43,11 @@ public class mainMenu {
 	private JTable tableDevices = new JTable();
 	private JessManipulator jessManipulator;
 	private JScrollPane scrollPaneDevices;
+	private JScrollPane scrollPaneRules;
+	private JList<String> rulesList = new JList<>();
 	
+	private JButton btnNewRule;
+
 
 	/**
 	 * Launch the application.
@@ -48,7 +56,7 @@ public class mainMenu {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					mainMenu window = new mainMenu();
+					MainMenu window = new MainMenu();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -60,7 +68,7 @@ public class mainMenu {
 	/**
 	 * Create the application.
 	 */
-	public mainMenu() {
+	public MainMenu() {
 		initialize();
 	}
 
@@ -68,6 +76,7 @@ public class mainMenu {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		jessManipulator = new JessManipulator();
 		frame = new JFrame();
 		frame.setBounds(10, 10, 1000, 700);
@@ -79,16 +88,15 @@ public class mainMenu {
 		
 		// label
 		JLabel lblSensores = new JLabel("Sensores");
-		springLayout.putConstraint(SpringLayout.NORTH, lblSensores, 23, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, lblSensores, 25, SpringLayout.WEST, frame.getContentPane());
 		frame.getContentPane().add(lblSensores);
 		
 		// scroll
 		
 		scrollPaneSensors = new JScrollPane();
 		springLayout.putConstraint(SpringLayout.NORTH, scrollPaneSensors, 6, SpringLayout.SOUTH, lblSensores);
+		springLayout.putConstraint(SpringLayout.SOUTH, scrollPaneSensors, -321, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblSensores, 0, SpringLayout.WEST, scrollPaneSensors);
 		springLayout.putConstraint(SpringLayout.WEST, scrollPaneSensors, 35, SpringLayout.WEST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, scrollPaneSensors, 318, SpringLayout.SOUTH, lblSensores);
 		springLayout.putConstraint(SpringLayout.EAST, scrollPaneSensors, 430, SpringLayout.WEST, frame.getContentPane());
 		frame.getContentPane().add(scrollPaneSensors);
 		
@@ -104,16 +112,51 @@ public class mainMenu {
 		frame.getContentPane().add(scrollPaneDevices);
 		
 		JLabel lblDevices = new JLabel("Devices");
+		springLayout.putConstraint(SpringLayout.NORTH, lblDevices, 23, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblDevices, 391, SpringLayout.EAST, lblSensores);
+		springLayout.putConstraint(SpringLayout.NORTH, lblSensores, 0, SpringLayout.NORTH, lblDevices);
 		springLayout.putConstraint(SpringLayout.NORTH, scrollPaneDevices, 6, SpringLayout.SOUTH, lblDevices);
-		springLayout.putConstraint(SpringLayout.NORTH, lblDevices, 0, SpringLayout.NORTH, lblSensores);
-		springLayout.putConstraint(SpringLayout.WEST, lblDevices, 401, SpringLayout.EAST, lblSensores);
 		frame.getContentPane().add(lblDevices);
+		
+		scrollPaneRules = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.NORTH, scrollPaneRules, 374, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, scrollPaneRules, 0, SpringLayout.WEST, scrollPaneSensors);
+		springLayout.putConstraint(SpringLayout.SOUTH, scrollPaneRules, 258, SpringLayout.SOUTH, scrollPaneSensors);
+		springLayout.putConstraint(SpringLayout.EAST, scrollPaneRules, -17, SpringLayout.EAST, frame.getContentPane());
+		frame.getContentPane().add(scrollPaneRules);
+		
+		btnNewRule = new JButton("New Rule");
+		springLayout.putConstraint(SpringLayout.NORTH, btnNewRule, 6, SpringLayout.SOUTH, scrollPaneRules);
+		springLayout.putConstraint(SpringLayout.EAST, btnNewRule, 0, SpringLayout.EAST, scrollPaneRules);
+		frame.getContentPane().add(btnNewRule);
 		frame.setResizable(false);
 		
-		
+	
 		buildSensorsTable();
 		buildDevicesTable();
+		buildRulesList();
 		
+		btnNewRule.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				NewRule newRuleFrame = new NewRule(jessManipulator,MainMenu.this);
+				newRuleFrame.setTitle("New Rule");
+				newRuleFrame.setVisible(true);
+
+				
+			}
+		});
+		
+		
+	}
+	
+	private void buildRulesList() {
+		
+		rulesList.setModel(new RulesModel());
+		scrollPaneRules.setViewportView(rulesList);
+	
 	}
 	
 	private void buildSensorsTable() {
@@ -310,10 +353,31 @@ public class mainMenu {
 			}
 			
 		}
-		
-
-			
+				
 	}
-		
+	
+	class RulesModel extends AbstractListModel<String> {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public int getSize() {
+			
+			return 10;
+		}
+
+		@Override
+		public String getElementAt(int index) {
+			
+			return "Regra " + index;
+		}
+		
+	}
+	
+	
+	
+	
 }
